@@ -4,9 +4,8 @@
 
 package frc.robot;
 
-import org.team7525.CI.CrashCheck;
-
 import edu.wpi.first.wpilibj.RobotBase;
+import org.team7525.CI.CrashCheck;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what
@@ -14,18 +13,19 @@ import edu.wpi.first.wpilibj.RobotBase;
  * call.
  */
 public final class Main {
-  private Main() {}
 
-  /**
-   * Main initialization function. Do not perform any initialization here.
-   *
-   * <p>If you change your main robot class, change the parameter type.
-   */
-  public static void main(String... args) {
-    RobotBase.startRobot(
-      "Crash".equals(System.getenv("CI_NAME"))
+	private Main() {}
+
+	/**
+	 * Main initialization function. Do not perform any initialization here.
+	 *
+	 * <p>If you change your main robot class, change the parameter type.
+	 */
+	public static void main(String... args) {
+		RobotBase.startRobot(
+			"Crash".equals(System.getenv("CI_NAME"))
 				? () -> new CrashCheck(new Robot())
 				: Robot::new
-    );
-  }
+		);
+	}
 }
