@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.team7525.misc.CommandsUtil;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 /**
@@ -17,6 +22,13 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {}
+
+  public void robotInit() {
+    Logger.addDataReceiver(new NT4Publisher());
+    Logger.start();
+    CommandsUtil.logCommands();
+    DriverStation.silenceJoystickConnectionWarning(true);
+  }
 
   @Override
   public void robotPeriodic() {}
