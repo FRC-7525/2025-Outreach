@@ -1,6 +1,13 @@
 # This gitignore has been specially created by the WPILib team.
 # If you remove items from this file, intellisense might break.
 
+# :)
+node_modules/
+ctre_Sim/
+logs/
+
+gradle.properties
+simgui.json
 ### C++ ###
 # Prerequisites
 *.d
