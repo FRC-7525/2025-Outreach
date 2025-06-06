@@ -82,7 +82,9 @@ public class IntakeIOSim implements IntakeIO {
 		input.pivotSetpoint = pivotPositionSetpoint;
 
 		pivotMotorTalonSim.setRawRotorPosition(pivotSim.getAngleRads());
-		pivotMotorTalonSim.setRotorVelocity(Units.radiansToRotations(pivotSim.getVelocityRadPerSec()));
+		pivotMotorTalonSim.setRotorVelocity(
+			Units.radiansToRotations(pivotSim.getVelocityRadPerSec())
+		);
 
 		wheelMotorTalonSim.setRawRotorPosition(wheelMotorSim.getAngularPosition());
 		wheelMotorTalonSim.setRotorVelocity(wheelMotorSim.getAngularVelocity());
