@@ -9,7 +9,7 @@ public enum IntakeStates implements SubsystemStates {
 		IntakeConstants.INTAKING_PIVOT.magnitude()
 	),
 	OUTTAKING(
-		"OUTAKKING",
+		"OUTTAKING",
 		IntakeConstants.OUTTAKING_SPEED.magnitude(),
 		IntakeConstants.OUTTAKING_PIVOT.magnitude()
 	),
