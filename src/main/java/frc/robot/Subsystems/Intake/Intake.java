@@ -44,6 +44,6 @@ public class Intake extends Subsystem<IntakeStates> {
 	}
 
 	public double getStateTime() {
-		return getStateTime();
+		return super.getStateTime();
 	}
 }
