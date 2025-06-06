@@ -20,7 +20,7 @@ public enum IntakeStates implements SubsystemStates {
 	),
 	IDLE("IDLE", IntakeConstants.IDLE_SPEED.magnitude(), IntakeConstants.IDLE_PIVOT.magnitude());
 
-	IntakeStates(String stateString, Double wheelSpeed, double pivotSetpoint) {
+	IntakeStates(String stateString, double wheelSpeed, double pivotSetpoint) {
 		this.wheelSpeed = wheelSpeed;
 		this.pivotSetpoint = pivotSetpoint;
 		this.stateString = stateString;
