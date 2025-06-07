@@ -10,6 +10,8 @@ public interface IndexerIO {
 
     public int getBallCount();
 
+    public void setBallCount(int count); // only used in sim
+
     public void setMotorSpeed(double speed);
 
 

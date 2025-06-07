@@ -56,5 +56,9 @@ public class IndexerIOTalon implements IndexerIO {
         Logger.recordOutput(SUBSYSTEM_NAME + "/Input Voltage", motor.getMotorVoltage().getValueAsDouble());
         Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
     }
+
+    public void setBallCount(int count) { //only used in sim
+        return;
+    }
     
 }
