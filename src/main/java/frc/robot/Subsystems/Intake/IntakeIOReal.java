@@ -23,16 +23,8 @@ public class IntakeIOReal implements IntakeIO {
 		pivotMotor = new TalonFX(IntakeConstants.Real.PIVOT_MOTOR_CANID);
 		wheelMotor.setPosition(0);
 		pivotMotor.setPosition(0);
-		pivotController = new PIDController(
-			IntakeConstants.Real.PIVOT_PID_CONSTANTS.kP,
-			IntakeConstants.Real.PIVOT_PID_CONSTANTS.kI,
-			IntakeConstants.Real.PIVOT_PID_CONSTANTS.kD
-		);
-		wheelSpeedController = new PIDController(
-			IntakeConstants.Real.WHEEL_PID_CONSTANTS.kP,
-			IntakeConstants.Real.WHEEL_PID_CONSTANTS.kI,
-			IntakeConstants.Real.WHEEL_PID_CONSTANTS.kD
-		);
+		pivotController = IntakeConstants.PIVOT_PID_CONTROLELR.get();
+		wheelSpeedController = IntakeConstants.VELOCITY_PID_CONTROLELR.get();
 		beamBreak = new DigitalInput(IntakeConstants.Real.BEAM_BREAK_DIO_PORT);
 	}
 

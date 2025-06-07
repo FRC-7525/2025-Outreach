@@ -1,24 +1,29 @@
 package frc.robot.Subsystems.Intake;
 
+import static edu.wpi.first.units.Units.*;
+
 import org.team7525.subsystem.SubsystemStates;
 
 public enum IntakeStates implements SubsystemStates {
 	INTAKING(
 		"INTAKING",
-		IntakeConstants.INTAKING_SPEED.magnitude(),
-		IntakeConstants.INTAKING_PIVOT.magnitude()
+		IntakeConstants.INTAKING_SPEED.in(RotationsPerSecond),
+		IntakeConstants.INTAKING_PIVOT.in(Degrees)
 	),
 	OUTTAKING(
 		"OUTTAKING",
-		IntakeConstants.OUTTAKING_SPEED.magnitude(),
-		IntakeConstants.OUTTAKING_PIVOT.magnitude()
+		IntakeConstants.OUTTAKING_SPEED.in(RotationsPerSecond),
+		IntakeConstants.OUTTAKING_PIVOT.in(Degrees)
 	),
 	PASSING(
 		"PASSING",
-		IntakeConstants.PASSING_SPEED.magnitude(),
-		IntakeConstants.PASSING_PIVOT.magnitude()
+		IntakeConstants.PASSING_SPEED.in(RotationsPerSecond),
+		IntakeConstants.PASSING_PIVOT.in(Degrees)
 	),
-	IDLE("IDLE", IntakeConstants.IDLE_SPEED.magnitude(), IntakeConstants.IDLE_PIVOT.magnitude());
+	IDLE("IDLE", 
+		IntakeConstants.IDLE_SPEED.in(RotationsPerSecond), 
+		IntakeConstants.IDLE_PIVOT.in(Degrees)
+	);
 
 	IntakeStates(String stateString, double wheelSpeed, double pivotSetpoint) {
 		this.wheelSpeed = wheelSpeed;

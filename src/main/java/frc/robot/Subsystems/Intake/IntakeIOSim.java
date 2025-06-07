@@ -1,6 +1,6 @@
 package frc.robot.Subsystems.Intake;
 
-import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.GlobalConstants.SIMULATION_PERIOD;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -38,33 +38,25 @@ public class IntakeIOSim implements IntakeIO {
 		pivotSim = new SingleJointedArmSim(
 			DCMotor.getKrakenX60(IntakeConstants.Sim.NUM_PIVOT_MOTORS),
 			IntakeConstants.Sim.PIVOT_GEARING,
-			IntakeConstants.Sim.PIVOT_MOI.magnitude(),
-			IntakeConstants.Sim.PIVOT_ARM_LENGTH.magnitude(),
-			Units.degreesToRadians(IntakeConstants.Sim.MIN_PIVOT_ANGLE.magnitude()),
-			Units.degreesToRadians(IntakeConstants.Sim.MAX_PIVOT_ANGLE.magnitude()),
+			IntakeConstants.Sim.PIVOT_MOI.in(KilogramSquareMeters),
+			IntakeConstants.Sim.PIVOT_ARM_LENGTH.in(Meters),
+			IntakeConstants.Sim.MIN_PIVOT_ANGLE.in(Radians),
+			IntakeConstants.Sim.MAX_PIVOT_ANGLE.in(Radians),
 			false,
-			Units.degreesToRadians(IntakeConstants.Sim.STARTING_PIVOT_ANGLE.magnitude())
+			IntakeConstants.Sim.STARTING_PIVOT_ANGLE.in(Radians)
 		);
 
 		wheelMotorSim = new DCMotorSim(
 			LinearSystemId.createDCMotorSystem(
 				DCMotor.getKrakenX60(IntakeConstants.Sim.NUM_WHEEL_MOTORS),
-				IntakeConstants.Sim.WHEEL_MOTOR_MOI.magnitude(),
+				IntakeConstants.Sim.WHEEL_MOTOR_MOI.in(KilogramSquareMeters),
 				IntakeConstants.Sim.WHEEL_MOTOR_GEARING
 			),
 			DCMotor.getKrakenX60(IntakeConstants.Sim.NUM_WHEEL_MOTORS)
 		);
 
-		pivotController = new PIDController(
-			IntakeConstants.Sim.PIVOT_PID_CONSTANTS.kP,
-			IntakeConstants.Sim.PIVOT_PID_CONSTANTS.kI,
-			IntakeConstants.Sim.PIVOT_PID_CONSTANTS.kD
-		);
-		wheelSpeedController = new PIDController(
-			IntakeConstants.Sim.WHEEL_PID_CONSTANTS.kP,
-			IntakeConstants.Sim.WHEEL_PID_CONSTANTS.kI,
-			IntakeConstants.Sim.WHEEL_PID_CONSTANTS.kD
-		);
+		pivotController = IntakeConstants.PIVOT_PID_CONTROLELR.get();
+		wheelSpeedController = IntakeConstants.VELOCITY_PID_CONTROLELR.get();
 
 		wheelSpeedSetpoint = 0;
 		pivotPositionSetpoint = 0;
