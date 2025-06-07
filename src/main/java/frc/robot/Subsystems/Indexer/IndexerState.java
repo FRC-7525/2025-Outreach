@@ -1,11 +1,12 @@
 package frc.robot.Subsystems.Indexer;
 
 import org.team7525.subsystem.SubsystemStates;
+import static frc.robot.Subsystems.Indexer.IndexerConstants.*;
 
 public enum IndexerState implements SubsystemStates {
-    INTAKING("Intaking", -0.5),
-    IDLE("idle", 0.0),
-    SHOOTING("SHooting", 1.0);
+    INTAKING("Intaking", -INTAKING_SPEED),
+    IDLE("idle", IDLE_SPEED),
+    SHOOTING("SHooting", SHOOTING_SPEED);
 
     private String stateString;
     private double motorSpeed;

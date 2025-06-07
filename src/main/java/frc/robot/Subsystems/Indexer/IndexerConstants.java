@@ -17,6 +17,12 @@ public class IndexerConstants {
     public static final int MIDDLE_SENSOR_PORT = 1;
     public static final int BOTTOM_SENSOR_PORT = 2;
 
+    public static final double IDLE_SPEED = 0.0;
+    public static final double SHOOTING_SPEED = 1;
+    public static final double INTAKING_SPEED = -.5;
+
+    
+
     public static final Voltage MAX_VOLTAGE = Volts.of(12.0);
 
     public static class SIM {
