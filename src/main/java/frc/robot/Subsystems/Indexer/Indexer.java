@@ -8,30 +8,29 @@ import org.team7525.subsystem.Subsystem;
 
 public class Indexer extends Subsystem<IndexerState> {
 
-    IndexerIO io;
-    Indexer instance;
+	IndexerIO io;
+	Indexer instance;
 
-    private Indexer() {
-        super("Indexer", IndexerState.IDLE);
-        this.io = switch(GlobalConstants.ROBOT_MODE) {
-            case REAL -> new IndexerIOTalon();
-            case SIM -> new IndexerIOSim();
-            case TESTING -> new IndexerIOTalon();
-        };
-    }
+	private Indexer() {
+		super("Indexer", IndexerState.IDLE);
+		this.io = switch (GlobalConstants.ROBOT_MODE) {
+			case REAL -> new IndexerIOTalon();
+			case SIM -> new IndexerIOSim();
+			case TESTING -> new IndexerIOTalon();
+		};
+	}
 
-    Indexer getInstance() {
-        if (instance == null) {
-            instance = new Indexer();
-        }
-        return instance;
-    }
+	Indexer getInstance() {
+		if (instance == null) {
+			instance = new Indexer();
+		}
+		return instance;
+	}
 
-    @Override
-    protected void runState() {
-        Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
-        io.setMotorSpeed(getState().getMotorSpeed());
-        io.logInfo();
-    }
-    
+	@Override
+	protected void runState() {
+		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
+		io.setMotorSpeed(getState().getMotorSpeed());
+		io.logInfo();
+	}
 }
