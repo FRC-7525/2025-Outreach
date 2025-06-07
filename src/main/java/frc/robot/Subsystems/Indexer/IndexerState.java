@@ -8,21 +8,20 @@ public enum IndexerState implements SubsystemStates {
     IDLE("idle", IDLE_SPEED),
     SHOOTING("SHooting", SHOOTING_SPEED);
 
-    private String stateString;
-    private double motorSpeed;
-    
-    IndexerState(String stateString, double motorSpeed) {
-        this.stateString = stateString;
-        this.motorSpeed = motorSpeed;
-    }
+	private String stateString;
+	private double motorSpeed;
 
-    @Override
-    public String getStateString() {
-        return stateString;
-    }
+	IndexerState(String stateString, double motorSpeed) {
+		this.stateString = stateString;
+		this.motorSpeed = motorSpeed;
+	}
 
-    public double getMotorSpeed() {
-        return motorSpeed;
-    }
-    
+	@Override
+	public String getStateString() {
+		return stateString;
+	}
+
+	public double getMotorSpeed() {
+		return motorSpeed;
+	}
 }

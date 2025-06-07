@@ -9,9 +9,10 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Voltage;
 
 public class IndexerConstants {
-    public static final String SUBSYSTEM_NAME = "Indexer";
-    public static final int NUM_MOTOR = 1;
-    public static final int INDEXER_MOTOR_CAN_ID = 15;
+
+	public static final String SUBSYSTEM_NAME = "Indexer";
+	public static final int NUM_MOTOR = 1;
+	public static final int INDEXER_MOTOR_CAN_ID = 15;
 
     public static final int TOP_SENSOR_PORT = 0; // random values
     public static final int MIDDLE_SENSOR_PORT = 1;
@@ -23,11 +24,15 @@ public class IndexerConstants {
 
     
 
-    public static final Voltage MAX_VOLTAGE = Volts.of(12.0);
+	public static final Voltage MAX_VOLTAGE = Volts.of(12.0);
 
-    public static class SIM {
-            public static final LinearSystem<N1, N1, N1> MOTOR_LINEAR_SYSTEM = LinearSystemId.createFlywheelSystem(
-                DCMotor.getKrakenX60Foc(NUM_MOTOR), // random values 
-                1, 1);
-    }
+	public static class SIM {
+
+		public static final LinearSystem<N1, N1, N1> MOTOR_LINEAR_SYSTEM =
+			LinearSystemId.createFlywheelSystem(
+				DCMotor.getKrakenX60Foc(NUM_MOTOR), // random values
+				1,
+				1
+			);
+	}
 }
