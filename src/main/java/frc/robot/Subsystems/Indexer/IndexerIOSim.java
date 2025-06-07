@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Indexer;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Subsystems.Indexer.IndexerConstants.*;
+import static frc.robot.GlobalConstants.SIMULATION_PERIOD;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -47,6 +48,8 @@ public class IndexerIOSim implements IndexerIO {
 
     @Override
     public void logInfo() {
+        flywheelSim.update(SIMULATION_PERIOD);
+
         Logger.recordOutput(SUBSYSTEM_NAME +"/Speed Setpoint", getMotorSpeedSetpoint());
         Logger.recordOutput(SUBSYSTEM_NAME +"/Motor Speed", getMotorSpeed());
         Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
