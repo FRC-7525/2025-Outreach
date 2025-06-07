@@ -6,10 +6,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.config.PIDConstants;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -17,6 +14,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.GlobalConstants;
+import java.util.function.Supplier;
 
 public final class IntakeConstants {
 
@@ -30,20 +28,20 @@ public final class IntakeConstants {
 	public static final Angle PASSING_PIVOT = Degrees.of(0);
 	public static final Angle IDLE_PIVOT = Degrees.of(0);
 
-	public static final Supplier<PIDController> PIVOT_PID_CONTROLELR = 
-		() -> switch (GlobalConstants.ROBOT_MODE) {
+	public static final Supplier<PIDController> PIVOT_PID_CONTROLELR = () ->
+		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(5, 0, 0);
 			case SIM -> new PIDController(5, 0, 0);
 			default -> new PIDController(1, 0, 0);
-		}; 
-	
+		};
+
 	// Can probably run straight ff or just set voltage, pid on wheels is wtv but why not right
-	public static final Supplier<PIDController> VELOCITY_PID_CONTROLELR = 
-		() -> switch (GlobalConstants.ROBOT_MODE) {
+	public static final Supplier<PIDController> VELOCITY_PID_CONTROLELR = () ->
+		switch (GlobalConstants.ROBOT_MODE) {
 			case REAL -> new PIDController(5, 0, 0);
 			case SIM -> new PIDController(5, 0, 0);
 			default -> new PIDController(1, 0, 0);
-	}; 
+		};
 
 	public static final class Sim {
 

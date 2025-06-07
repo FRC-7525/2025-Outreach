@@ -20,8 +20,9 @@ public enum IntakeStates implements SubsystemStates {
 		IntakeConstants.PASSING_SPEED.in(RotationsPerSecond),
 		IntakeConstants.PASSING_PIVOT.in(Degrees)
 	),
-	IDLE("IDLE", 
-		IntakeConstants.IDLE_SPEED.in(RotationsPerSecond), 
+	IDLE(
+		"IDLE",
+		IntakeConstants.IDLE_SPEED.in(RotationsPerSecond),
 		IntakeConstants.IDLE_PIVOT.in(Degrees)
 	);
 
