@@ -18,8 +18,8 @@ public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 		if (instance == null) {
 			AdjustableHoodIO AdjustableHoodio =
 				switch (ROBOT_MODE) {
-					case SIM -> new AdjustableHoodIOReal();
-					case REAL -> new AdjustableHoodIOSim();
+					case SIM -> new AdjustableHoodIOSim();
+					case REAL -> new AdjustableHoodIOReal();
 					case TESTING -> new AdjustableHoodIOReal();
 				};
 			instance = new AdjustableHood(AdjustableHoodio);
