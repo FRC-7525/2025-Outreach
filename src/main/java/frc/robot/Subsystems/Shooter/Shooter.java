@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 import edu.wpi.first.units.measure.AngularVelocity;
 import static frc.robot.GlobalConstants.*;
+import static frc.robot.Subsystems.Shooter.ShooterConstants.SUBSYSTEM_NAME;
 
 public class Shooter extends Subsystem<ShooterStates> {
     private ShooterIO io;
@@ -26,7 +27,7 @@ public class Shooter extends Subsystem<ShooterStates> {
     }
 
     private Shooter(ShooterIO io) {
-        super("Shooter", ShooterStates.IDLE);
+        super(SUBSYSTEM_NAME, ShooterStates.IDLE);
         this.io = io;
         inputs = new ShooterIOInputsAutoLogged();
     }
@@ -40,7 +41,7 @@ public class Shooter extends Subsystem<ShooterStates> {
         }
 
         io.updateInputs(inputs);
-        Logger.processInputs("Shooter", inputs);
+        Logger.processInputs("Shooter Inputs", inputs);
         Logger.recordOutput("Shooter/State", getState().getStateString());
     }
 

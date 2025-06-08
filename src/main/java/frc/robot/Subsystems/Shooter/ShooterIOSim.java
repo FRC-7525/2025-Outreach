@@ -1,5 +1,6 @@
 package frc.robot.Subsystems.Shooter;
 
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.SIMULATION_PERIOD;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
@@ -26,8 +27,8 @@ public class ShooterIOSim implements ShooterIO {
         flywheelSim = new FlywheelSim(
             LinearSystemId.createFlywheelSystem(
                 DCMotor.getFalcon500(1),
-                0.1,
-                0.2
+                FLYWHEEL_MOI.in(KilogramSquareMeters),
+                FLYWHEEL_GEARING
             ),
             DCMotor.getFalcon500(1)
         ); // Lowkey idk
