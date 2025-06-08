@@ -1,13 +1,14 @@
 package frc.robot.Subsystems.AdjustableHood;
 
+import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.SUBSYSTEM_NAME;
 
+import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
-import edu.wpi.first.units.measure.Angle;
-import static frc.robot.GlobalConstants.*;
 
 public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
+
 	private AdjustableHoodIO io;
 	private AdjustableHoodIOInputsAutoLogged inputs;
 	private Angle dynamicSetpoint;
@@ -15,7 +16,7 @@ public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 
 	public static AdjustableHood getInstance() {
 		if (instance == null) {
-			AdjustableHoodIO AdjustableHoodio = 
+			AdjustableHoodIO AdjustableHoodio =
 				switch (ROBOT_MODE) {
 					case SIM -> new AdjustableHoodIOReal();
 					case REAL -> new AdjustableHoodIOSim();
@@ -23,7 +24,7 @@ public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 				};
 			instance = new AdjustableHood(AdjustableHoodio);
 		}
-		
+
 		return instance;
 	}
 
