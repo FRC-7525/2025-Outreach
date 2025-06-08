@@ -2,7 +2,7 @@ package frc.robot.Subsystems.HoodedShooterSupersystem;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.SUBSYSTEM_NAME;
+import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 import edu.wpi.first.units.measure.Angle;
@@ -56,11 +56,11 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
     
     private Angle calculateHoodSetpoint() {
         // Placeholder for actual hood setpoint calculation logic
-        return Degrees.of(15); // Replace with actual calculation
+        return Degrees.of(FAKE_VALUE); // Replace with actual calculation
     }
 
     private AngularVelocity calculateShooterSetpoint() {
         // Placeholder for actual shooter setpoint calculation logic
-        return RotationsPerSecond.of(100); // Replace with actual calculation
+        return RotationsPerSecond.of(FAKE_VALUE_2); // Replace with actual calculation
     }
 }
