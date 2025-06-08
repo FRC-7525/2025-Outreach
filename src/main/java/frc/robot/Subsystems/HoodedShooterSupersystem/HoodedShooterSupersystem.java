@@ -3,13 +3,13 @@ package frc.robot.Subsystems.HoodedShooterSupersystem;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
 import frc.robot.Subsystems.Shooter.Shooter;
-
+import org.littletonrobotics.junction.Logger;
+import org.team7525.subsystem.Subsystem;
 
 public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystemStates> {
 
