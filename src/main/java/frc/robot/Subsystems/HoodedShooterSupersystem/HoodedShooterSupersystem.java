@@ -25,7 +25,7 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 	}
 
 	private HoodedShooterSupersystem() {
-		super("HoodedShooterSupersystem", HoodedShooterSupersystemStates.IDLE);
+		super(SUBSYSTEM_NAME, HoodedShooterSupersystemStates.IDLE);
 		hood = AdjustableHood.getInstance();
 		shooter = Shooter.getInstance();
 	}
