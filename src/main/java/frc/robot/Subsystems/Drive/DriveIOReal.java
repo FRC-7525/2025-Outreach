@@ -31,7 +31,7 @@ public class DriveIOReal implements DriveIO {
 			File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
 			swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(
 				MAX_SPEED.magnitude(),
-				new Pose2d(9.9, 4.0, Rotation2d.fromDegrees(0))
+				new Pose2d(INIT_POSE_X, INIT_POSE_Y, Rotation2d.fromDegrees(0))
 			);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to create SwerveDrive", e);
