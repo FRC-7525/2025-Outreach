@@ -16,6 +16,7 @@ public class GlobalConstants {
 	public static final double SIMULATION_PERIOD = 0.02;
 
 	public static class Controllers {
+
 		public static final XboxController DRIVER_CONTROLLER = new XboxController(0);
 	}
 }

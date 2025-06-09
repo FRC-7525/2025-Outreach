@@ -1,8 +1,6 @@
 package frc.robot.Subsystems.Drive;
 
-import static frc.robot.Subsystems.Drive.DriveConstants.*; 
-
-import java.io.File;
+import static frc.robot.Subsystems.Drive.DriveConstants.*;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +10,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.GlobalConstants.Controllers;
+import java.io.File;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import swervelib.parser.SwerveParser;
@@ -20,14 +19,14 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveIOReal implements DriveIO {
 
-    public DriveIOInputs inputs;
+	public DriveIOInputs inputs;
 
-    private SwerveInputStream swerveInputs; 
-    private final SwerveDrive swerveDrive; 
-    private boolean slow; 
+	private SwerveInputStream swerveInputs;
+	private final SwerveDrive swerveDrive;
+	private boolean slow;
 
-    public DriveIOReal() {
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+	public DriveIOReal() {
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 		try {
 			File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
 			swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(
@@ -37,56 +36,68 @@ public class DriveIOReal implements DriveIO {
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to create SwerveDrive", e);
 		}
-        swerveDrive.setMotorIdleMode(true);
+		swerveDrive.setMotorIdleMode(true);
 
-        swerveInputs = SwerveInputStream.of(swerveDrive, () -> -Controllers.DRIVER_CONTROLLER.getLeftY(), () -> -Controllers.DRIVER_CONTROLLER.getLeftX())
+		swerveInputs = SwerveInputStream.of(
+			swerveDrive,
+			() -> -Controllers.DRIVER_CONTROLLER.getLeftY(),
+			() -> -Controllers.DRIVER_CONTROLLER.getLeftX()
+		)
 			.withControllerRotationAxis(() -> -Controllers.DRIVER_CONTROLLER.getRightX())
 			.allianceRelativeControl(true)
 			.driveToPoseEnabled(false);
-            
-        slow = false; 
-    }
 
-    @Override
-    public void updateInputs(DriveIOInputs inputs) {
+		slow = false;
+	}
 
-    }
+	@Override
+	public void updateInputs(DriveIOInputs inputs) {}
 
-    @Override
-    public SwerveDrive getDrive() {
-        return swerveDrive; 
-    }
+	@Override
+	public SwerveDrive getDrive() {
+		return swerveDrive;
+	}
 
-    @Override
-    public ChassisSpeeds getSwerveInputs() {
-        return swerveInputs.get(); 
-    }
+	@Override
+	public ChassisSpeeds getSwerveInputs() {
+		return swerveInputs.get();
+	}
 
-    @Override
-    public void setSpeed() {
-        if (slow) {
+	@Override
+	public void setSpeed() {
+		if (slow) {
 			if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
-                slow = false;
-			    swerveInputs.scaleTranslation(SLOW_SPEED);
-			    swerveInputs.scaleRotation(SLOW_SPEED);
-            }
+				slow = false;
+				swerveInputs.scaleTranslation(SLOW_SPEED);
+				swerveInputs.scaleRotation(SLOW_SPEED);
+			}
 		} else {
 			if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
-                slow = true;
-			    swerveInputs.scaleTranslation(NORMAL_SPEED);
-			    swerveInputs.scaleRotation(NORMAL_SPEED);
-            }
+				slow = true;
+				swerveInputs.scaleTranslation(NORMAL_SPEED);
+				swerveInputs.scaleRotation(NORMAL_SPEED);
+			}
 		}
-    }
+	}
 
-    @Override
-    public void zeroGyro() {
-        swerveDrive.resetOdometry(new Pose2d(swerveDrive.getPose().getX(), swerveDrive.getPose().getY(), Rotation2d.fromDegrees(0)));
-    }
-    
-    @Override
-     public  void addVisionMeasurement(Pose2d visionPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
-        swerveDrive.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
-        swerveDrive.updateOdometry();
-     }
+	@Override
+	public void zeroGyro() {
+		swerveDrive.resetOdometry(
+			new Pose2d(
+				swerveDrive.getPose().getX(),
+				swerveDrive.getPose().getY(),
+				Rotation2d.fromDegrees(0)
+			)
+		);
+	}
+
+	@Override
+	public void addVisionMeasurement(
+		Pose2d visionPose,
+		double timestamp,
+		Matrix<N3, N1> visionMeasurementStdDevs
+	) {
+		swerveDrive.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
+		swerveDrive.updateOdometry();
+	}
 }
