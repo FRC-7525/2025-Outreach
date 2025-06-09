@@ -54,10 +54,7 @@ public class IndexerIOSim implements IndexerIO {
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
-		Logger.recordOutput(
-			SUBSYSTEM_NAME + "/Input Voltage",
-			flywheelSim.getInputVoltage()
-		);
+		Logger.recordOutput(SUBSYSTEM_NAME + "/Input Voltage", flywheelSim.getInputVoltage());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
 	}
 
