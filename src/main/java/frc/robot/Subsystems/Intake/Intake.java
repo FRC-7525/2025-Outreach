@@ -7,7 +7,6 @@ import org.team7525.subsystem.Subsystem;
 
 public class Intake extends Subsystem<IntakeStates> {
 
-	// The IO does something
 	private IntakeIO io;
 	private IntakeIOInputsAutoLogged inputs;
 	private static Intake instance;
