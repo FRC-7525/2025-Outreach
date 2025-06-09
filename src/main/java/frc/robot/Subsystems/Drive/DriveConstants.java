@@ -9,9 +9,9 @@ public final class DriveConstants {
 	//Btw im just using frontier's numbers
 	public static final String SUBSYSTEM_NAME = "Drive";
 
-    //Init Pose
-    public static final double INIT_POSE_X = 9.9;
-    public static final double INIT_POSE_Y = 4; 
+	//Init Pose
+	public static final double INIT_POSE_X = 9.9;
+	public static final double INIT_POSE_Y = 4;
 
 	//Speed
 	public static final LinearVelocity MAX_SPEED = MetersPerSecond.of(4.6);
