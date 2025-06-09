@@ -10,6 +10,7 @@ public final class DriveConstants {
 
     //Speed
     public static final LinearVelocity MAX_SPEED = MetersPerSecond.of(4.6); 
-    public static final double SPEED = DriveIOReal.slow ? 0.33: 1;   
+    public static final double SLOW_SPEED = 0.33; 
+    public static final double NORMAL_SPEED = 1; 
     
 }

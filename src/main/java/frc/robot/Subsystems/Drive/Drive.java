@@ -61,7 +61,7 @@ public class Drive extends Subsystem<DriveStates> {
         SmartDashboard.putData("Field", field);
     }
 
-    public void logOutputs(SwerveDrive state) {
+    public void logOutputs() {
         Logger.recordOutput(SUBSYSTEM_NAME + "/Pose", getPose());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Drive State", getState());
     }
@@ -71,7 +71,6 @@ public class Drive extends Subsystem<DriveStates> {
         addTrigger(ROBOT_RELATIVE, FIELD_RELATIVE, DRIVER_CONTROLLER::getRightBumperButtonPressed); 
 
         addRunnableTrigger(() -> {io.zeroGyro();}, DRIVER_CONTROLLER::getLeftBumperButtonPressed);
-        addRunnableTrigger(() ->{slow = true;}, DRIVER_CONTROLLER::getRightTriggerAxis > 50);
     }
 
     public void setSpeed() {
