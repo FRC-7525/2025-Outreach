@@ -7,7 +7,7 @@ import org.team7525.subsystem.SubsystemStates;
 public enum IndexerState implements SubsystemStates {
 	INTAKING("Intaking", -INTAKING_SPEED),
 	IDLE("idle", IDLE_SPEED),
-	SHOOTING("SHooting", SHOOTING_SPEED);
+	SHOOTING("Shooting", SHOOTING_SPEED);
 
 	private String stateString;
 	private double motorSpeed;

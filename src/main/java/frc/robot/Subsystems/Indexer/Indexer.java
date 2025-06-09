@@ -8,8 +8,8 @@ import org.team7525.subsystem.Subsystem;
 
 public class Indexer extends Subsystem<IndexerState> {
 
-	IndexerIO io;
-	Indexer instance;
+	private IndexerIO io;
+	private static Indexer instance;
 
 	private Indexer() {
 		super("Indexer", IndexerState.IDLE);
@@ -20,7 +20,7 @@ public class Indexer extends Subsystem<IndexerState> {
 		};
 	}
 
-	Indexer getInstance() {
+	public static Indexer getInstance() {
 		if (instance == null) {
 			instance = new Indexer();
 		}
@@ -32,5 +32,13 @@ public class Indexer extends Subsystem<IndexerState> {
 		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		io.setMotorSpeed(getState().getMotorSpeed());
 		io.logInfo();
+	}
+
+	public int getBallCount() {
+		return io.getBallCount();
+	}
+
+	public void setBallCount(int amount) {
+		io.setBallCount(amount);
 	}
 }

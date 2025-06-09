@@ -44,6 +44,7 @@ public class IndexerIOSim implements IndexerIO {
 
 	@Override
 	public void setMotorSpeed(double speed) {
+		motorSpeedSetpoint = speed;
 		flywheelSim.setInputVoltage(speed * MAX_VOLTAGE.in(Volts));
 	}
 
@@ -53,7 +54,10 @@ public class IndexerIOSim implements IndexerIO {
 
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
+		Logger.recordOutput(
+			SUBSYSTEM_NAME + "/Input Voltage",
+			flywheelSim.getInputVoltage()
+		);
 		Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
 	}
 
