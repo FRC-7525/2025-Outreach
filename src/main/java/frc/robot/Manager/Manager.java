@@ -47,9 +47,11 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(INTAKING, INTAKE_PASSING, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(INTAKE_PASSING, FIXED_ALIGN, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(FIXED_ALIGN, FIXED_SHOOT, DRIVER_CONTROLLER::getAButtonPressed);
+		addTrigger(FIXED_ALIGN, FIXED_SHOOT, () -> hoodedShooterSupersystem.readyToShoot());
 
 		addTrigger(INTAKE_PASSING, DYNAMIC_ALIGN, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(DYNAMIC_ALIGN, DYNAMIC_SHOOT, DRIVER_CONTROLLER::getYButtonPressed);
+		addTrigger(DYNAMIC_ALIGN, DYNAMIC_SHOOT, () -> hoodedShooterSupersystem.readyToShoot());
 	}
 
 	@Override
@@ -57,36 +59,29 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (DRIVER_CONTROLLER.getBButtonPressed()) {
 			setState(IDLE);
 		}
-
-		if (hoodedShooterSupersystem.readyToShoot() && getState() == FIXED_ALIGN) {
-			setState(FIXED_SHOOT);
-		}
-
-		if (hoodedShooterSupersystem.readyToShoot() && getState() == DYNAMIC_ALIGN) {
-			setState(DYNAMIC_SHOOT);
-		}
-
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State Time", getStateTime());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State String", getState().getStateString());
-
+		
+		logData();	
+		
 		intake.setState(getState().getIntakeStates());
-		intake.periodic();
-
 		hoodedShooterSupersystem.setState(getState().getHoodedShooterSupersystemStates());
-		hoodedShooterSupersystem.periodic();
-
-		adjustableHood.setState(getState().getAdjustableHoodStates());
-		adjustableHood.periodic();
-
-		shooter.setState(getState().getShooterStates());
-		shooter.periodic();
-
 		indexer.setState(getState().getIndexerStates());
+		adjustableHood.setState(getState().getAdjustableHoodStates());
+		shooter.setState(getState().getShooterStates());
+		
+		shooter.periodic();
+		hoodedShooterSupersystem.periodic();
 		indexer.periodic();
+		intake.periodic();
+		adjustableHood.periodic();
 		//drive.periodic();
 	}
 
 	public boolean hasGamepiece() {
 		return intake.hasGamepiece();
+	}
+
+	public void logData() {
+	Logger.recordOutput(SUBSYSTEM_NAME + "/State Time", getStateTime());
+	Logger.recordOutput(SUBSYSTEM_NAME + "/State String", getState().getStateString());
 	}
 }
