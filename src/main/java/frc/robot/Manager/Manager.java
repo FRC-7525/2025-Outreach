@@ -59,15 +59,15 @@ public class Manager extends Subsystem<ManagerStates> {
 		if (DRIVER_CONTROLLER.getBButtonPressed()) {
 			setState(IDLE);
 		}
-		
-		logData();	
-		
+
+		logData();
+
 		intake.setState(getState().getIntakeStates());
 		hoodedShooterSupersystem.setState(getState().getHoodedShooterSupersystemStates());
 		indexer.setState(getState().getIndexerStates());
 		adjustableHood.setState(getState().getAdjustableHoodStates());
 		shooter.setState(getState().getShooterStates());
-		
+
 		shooter.periodic();
 		hoodedShooterSupersystem.periodic();
 		indexer.periodic();
@@ -81,7 +81,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	}
 
 	public void logData() {
-	Logger.recordOutput(SUBSYSTEM_NAME + "/State Time", getStateTime());
-	Logger.recordOutput(SUBSYSTEM_NAME + "/State String", getState().getStateString());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/State Time", getStateTime());
+		Logger.recordOutput(SUBSYSTEM_NAME + "/State String", getState().getStateString());
 	}
 }
