@@ -77,9 +77,9 @@ public enum ManagerStates implements SubsystemStates {
 	private IntakeStates intake;
 	// private HoodAndShooterStates hoodAndShooter;
 	private IndexerState indexer;
-	public AdjustableHoodStates adjustableHood;
-	public HoodedShooterSupersystemStates hoodedShooterSupersystem;
-	public ShooterStates shooter;
+	private AdjustableHoodStates adjustableHood;
+	private HoodedShooterSupersystemStates hoodedShooterSupersystem;
+	private ShooterStates shooter;
 
 	ManagerStates(
 		String stateString,
@@ -121,5 +121,4 @@ public enum ManagerStates implements SubsystemStates {
 	public ShooterStates getShooterStates() {
 		return shooter;
 	}
-	//public Hood and shooter yatayata
 }

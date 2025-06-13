@@ -14,13 +14,13 @@ import org.team7525.subsystem.Subsystem;
 
 public class Manager extends Subsystem<ManagerStates> {
 
-	public static Manager instance;
-	public Intake intake;
-	public AdjustableHood adjustableHood;
-	public Shooter shooter;
+	private static Manager instance;
+	private Intake intake;
+	private AdjustableHood adjustableHood;
+	private Shooter shooter;
 	//public Drive drive;
-	public Indexer indexer;
-	public HoodedShooterSupersystem hoodedShooterSupersystem;
+	private Indexer indexer;
+	private HoodedShooterSupersystem hoodedShooterSupersystem;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -30,7 +30,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	}
 
 	public Manager() {
-		super("Manager", ManagerStates.IDLE);
+		super(SUBSYSTEM_NAME, ManagerStates.IDLE);
 		intake = Intake.getInstance();
 		hoodedShooterSupersystem = HoodedShooterSupersystem.getInstance();
 		adjustableHood = AdjustableHood.getInstance();
