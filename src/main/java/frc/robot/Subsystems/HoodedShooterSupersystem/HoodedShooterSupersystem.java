@@ -10,8 +10,6 @@ import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,6 +18,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
 import frc.robot.Subsystems.Shooter.Shooter;
+import java.util.ArrayList;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -78,25 +77,59 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 	}
 
 	// prolly want to call this in manager or move to shooter
-	public ArrayList<Translation3d> calculateShotTrajectory(LinearVelocity shooterTangentialVelocity, AngularVelocity shooterAngularVel, Angle shooterAngle, Pose2d robotPose, ChassisSpeeds robotFieldRelSpeed) {
+	public ArrayList<Translation3d> calculateShotTrajectory(
+		LinearVelocity shooterTangentialVelocity,
+		AngularVelocity shooterAngularVel,
+		Angle shooterAngle,
+		Pose2d robotPose,
+		ChassisSpeeds robotFieldRelSpeed
+	) {
 		ArrayList<Translation3d> trajectory = new ArrayList<>();
-		Translation3d startingPosition = new Translation3d(robotPose.getX(), robotPose.getY(), GROUND_TO_SHOOTER.in(Meters));
+		Translation3d startingPosition = new Translation3d(
+			robotPose.getX(),
+			robotPose.getY(),
+			GROUND_TO_SHOOTER.in(Meters)
+		);
 
-		double vx = (Math.cos(shooterAngle.in(Radian)) * shooterTangentialVelocity.in(MetersPerSecond) * robotPose.getRotation().getCos()) + robotFieldRelSpeed.vxMetersPerSecond;
-		double vy = (Math.cos(shooterAngle.in(Radian)) * shooterTangentialVelocity.in(MetersPerSecond) * robotPose.getRotation().getCos()) + robotFieldRelSpeed.vyMetersPerSecond;
-		double vz = Math.sin(shooterAngle.in(Radian)) * shooterTangentialVelocity.in(MetersPerSecond);
-		
-		double firstTerm = shooterTangentialVelocity.in(MetersPerSecond) * Math.sin(shooterAngle.in(Radian));
-		double secondTerm = Math.sqrt(firstTerm * firstTerm + 2 * GRAVITY.in(MetersPerSecondPerSecond) * GROUND_TO_SHOOTER.in(Meter));
-		double aproximateTimeToGround = (firstTerm + secondTerm) / GRAVITY.in(MetersPerSecondPerSecond);
+		double vx =
+			(Math.cos(shooterAngle.in(Radian)) *
+				shooterTangentialVelocity.in(MetersPerSecond) *
+				robotPose.getRotation().getCos()) +
+			robotFieldRelSpeed.vxMetersPerSecond;
+		double vy =
+			(Math.cos(shooterAngle.in(Radian)) *
+				shooterTangentialVelocity.in(MetersPerSecond) *
+				robotPose.getRotation().getCos()) +
+			robotFieldRelSpeed.vyMetersPerSecond;
+		double vz =
+			Math.sin(shooterAngle.in(Radian)) * shooterTangentialVelocity.in(MetersPerSecond);
+
+		double firstTerm =
+			shooterTangentialVelocity.in(MetersPerSecond) * Math.sin(shooterAngle.in(Radian));
+		double secondTerm = Math.sqrt(
+			firstTerm * firstTerm +
+			2 * GRAVITY.in(MetersPerSecondPerSecond) * GROUND_TO_SHOOTER.in(Meter)
+		);
+		double aproximateTimeToGround =
+			(firstTerm + secondTerm) / GRAVITY.in(MetersPerSecondPerSecond);
 
 		for (int i = 0; i < aproximateTimeToGround; i += 0.02) {
-
 			double netVelocity = Math.sqrt(vx * vx + vy * vy + vz * vz);
-            double dragAccel = 0.5 * AIR_DENSITY * DRAG_COEFFICIENT * Math.PI * BALL_RADIUS.in(Meters) * BALL_RADIUS.in(Meters) * netVelocity / BALL_MASS.in(Kilogram);
-			vx -= dragAccel * vx / netVelocity * dt;
-			vy += MAGNUS_COEFFICIENT * shooterAngularVel.in(RotationsPerSecond) * netVelocity / BALL_MASS.in(Kilogram) * dt;
-			vz -= (GRAVITY.in(MetersPerSecondPerSecond) + dragAccel * vy / netVelocity) * dt;
+			double dragAccel =
+				(0.5 *
+					AIR_DENSITY *
+					DRAG_COEFFICIENT *
+					Math.PI *
+					BALL_RADIUS.in(Meters) *
+					BALL_RADIUS.in(Meters) *
+					netVelocity) /
+				BALL_MASS.in(Kilogram);
+			vx -= ((dragAccel * vx) / netVelocity) * dt;
+			vy +=
+				((MAGNUS_COEFFICIENT * shooterAngularVel.in(RotationsPerSecond) * netVelocity) /
+					BALL_MASS.in(Kilogram)) *
+				dt;
+			vz -= (GRAVITY.in(MetersPerSecondPerSecond) + (dragAccel * vy) / netVelocity) * dt;
 
 			Translation3d deltaPosition = new Translation3d(vx * dt, vy * dt, vz * dt);
 			startingPosition = startingPosition.plus(deltaPosition);
