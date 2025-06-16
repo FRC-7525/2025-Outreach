@@ -50,6 +50,12 @@ public class AdjustableHoodIOReal implements AdjustableHoodIO {
 
 	@Override
 	public boolean atHoodSetpoint() {
-		return Math.abs((pivotMotor.getPosition().getValueAsDouble() / GEAR_RATIO) - hoodSetpoint.in(Rotations)) < PIVOT_TOLERANCE.in(Rotations);
+		return (
+			Math.abs(
+				(pivotMotor.getPosition().getValueAsDouble() / GEAR_RATIO) -
+				hoodSetpoint.in(Rotations)
+			) <
+			PIVOT_TOLERANCE.in(Rotations)
+		);
 	}
 }

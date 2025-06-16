@@ -1,8 +1,10 @@
 package frc.robot.Subsystems.Shooter;
+
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.GlobalConstants.SIMULATION_PERIOD;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -62,8 +64,12 @@ public class ShooterIOSim implements ShooterIO {
 
 	@Override
 	public boolean atTargetSpeed() {
-		return Math.abs(
-            Units.radiansToRotations(flywheelSim.getAngularVelocityRadPerSec()) - flywheelSetpoint.in(RotationsPerSecond)
-        ) < FLYWHEEL_TOLERANCE.in(RotationsPerSecond);
+		return (
+			Math.abs(
+				Units.radiansToRotations(flywheelSim.getAngularVelocityRadPerSec()) -
+				flywheelSetpoint.in(RotationsPerSecond)
+			) <
+			FLYWHEEL_TOLERANCE.in(RotationsPerSecond)
+		);
 	}
 }

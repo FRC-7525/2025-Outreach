@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 public class Shooter extends Subsystem<ShooterStates> {
+
 	private ShooterIO io;
 	private ShooterIOInputsAutoLogged inputs;
 	private AngularVelocity dynamicSetpoint;
