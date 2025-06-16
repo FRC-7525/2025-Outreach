@@ -4,8 +4,9 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
-
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MomentOfInertia;
@@ -21,10 +22,15 @@ public class AdjustableHoodConstants {
 	public static final Angle MAX_ANGLE = Degrees.of(60);
 	public static final Angle MIN_ANGLE = Degrees.of(0);
 
-	public static final Supplier<PIDController> PIVOT_PID = () ->
+	public static final Constraints constraints = new TrapezoidProfile.Constraints(
+		Math.toRadians(180), // Max angular velocity in radians per second (random)
+		Math.toRadians(90) // Max angular acceleration in radians per second squared (random)
+	);
+
+	public static final Supplier<ProfiledPIDController> PIVOT_PID = () ->
 		switch (ROBOT_MODE) {
-			case SIM -> new PIDController(0.1, 0, 0.01);
-			default -> new PIDController(0.1, 0, 0.01);
+			case SIM -> new ProfiledPIDController(0.1, 0, 0.01, constraints);
+			default -> new ProfiledPIDController(0.1, 0, 0.01, constraints);
 		};
 
 	public static final class Real {

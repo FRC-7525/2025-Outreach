@@ -8,7 +8,6 @@ import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 public class Shooter extends Subsystem<ShooterStates> {
-
 	private ShooterIO io;
 	private ShooterIOInputsAutoLogged inputs;
 	private AngularVelocity dynamicSetpoint;
@@ -45,10 +44,6 @@ public class Shooter extends Subsystem<ShooterStates> {
 		io.updateInputs(inputs);
 		Logger.processInputs("Shooter Inputs", inputs);
 		Logger.recordOutput("Shooter/State", getState().getStateString());
-	}
-
-	public void setDynamicShooterSetpoint(AngularVelocity setpoint) {
-		dynamicSetpoint = setpoint;
 	}
 
 	public boolean atSetpoint() {

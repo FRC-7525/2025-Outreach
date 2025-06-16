@@ -9,7 +9,7 @@ import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -20,7 +20,7 @@ public class AdjustableHoodIOSim implements AdjustableHoodIO {
 	private TalonFX pivotMotor;
 	private TalonFXSimState pivotMotorTalonSim;
 	private SingleJointedArmSim pivotSim;
-	private PIDController pivotController;
+	private ProfiledPIDController pivotController;
 	private Angle pivotSetpoint;
 
 	public AdjustableHoodIOSim() {
