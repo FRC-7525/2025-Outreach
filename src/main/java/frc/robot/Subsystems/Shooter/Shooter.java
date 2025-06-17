@@ -47,10 +47,6 @@ public class Shooter extends Subsystem<ShooterStates> {
 		Logger.recordOutput("Shooter/State", getState().getStateString());
 	}
 
-	public void setDynamicShooterSetpoint(AngularVelocity setpoint) {
-		dynamicSetpoint = setpoint;
-	}
-
 	public boolean atSetpoint() {
 		return io.atTargetSpeed();
 	}

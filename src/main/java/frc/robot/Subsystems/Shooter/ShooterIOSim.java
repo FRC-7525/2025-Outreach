@@ -7,7 +7,7 @@ import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -19,7 +19,7 @@ public class ShooterIOSim implements ShooterIO {
 	private TalonFX flywheelMotor;
 	private TalonFXSimState flywheelMotorSim;
 	private FlywheelSim flywheelSim;
-	private PIDController flywheelController;
+	private SimpleMotorFeedforward flywheelController;
 	private AngularVelocity flywheelSetpoint;
 
 	public ShooterIOSim() {
@@ -34,8 +34,7 @@ public class ShooterIOSim implements ShooterIO {
 			DCMotor.getFalcon500(1)
 		); // Lowkey idk
 
-		flywheelController = FLYWHEEL_PID.get();
-		flywheelController.setTolerance(FLYWHEEL_TOLERANCE.in(RotationsPerSecond));
+		flywheelController = FLYWHEEL_FF.get();
 	}
 
 	@Override
@@ -65,6 +64,12 @@ public class ShooterIOSim implements ShooterIO {
 
 	@Override
 	public boolean atTargetSpeed() {
-		return flywheelController.atSetpoint();
+		return (
+			Math.abs(
+				Units.radiansToRotations(flywheelSim.getAngularVelocityRadPerSec()) -
+				flywheelSetpoint.in(RotationsPerSecond)
+			) <
+			FLYWHEEL_TOLERANCE.in(RotationsPerSecond)
+		);
 	}
 }

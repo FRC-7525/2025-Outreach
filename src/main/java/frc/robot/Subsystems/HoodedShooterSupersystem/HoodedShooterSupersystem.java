@@ -32,11 +32,6 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 
 	@Override
 	public void runState() {
-		if (getState() == HoodedShooterSupersystemStates.DYNAMIC) {
-			hood.setDynamicHoodSetpoint(calculateHoodSetpoint());
-			shooter.setDynamicShooterSetpoint(calculateShooterSetpoint());
-		}
-
 		hood.setState(getState().getAdjustableHoodState());
 		shooter.setState(getState().getShooterState());
 
@@ -55,12 +50,12 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 		return hood.atSetpoint() && shooter.atSetpoint();
 	}
 
-	private Angle calculateHoodSetpoint() {
+	public Angle calculateHoodSetpoint() {
 		// Placeholder for actual hood setpoint calculation logic
 		return Degrees.of(FAKE_VALUE); // Replace with actual calculation
 	}
 
-	private AngularVelocity calculateShooterSetpoint() {
+	public AngularVelocity calculateShooterSetpoint() {
 		// Placeholder for actual shooter setpoint calculation logic
 		return RotationsPerSecond.of(FAKE_VALUE_2); // Replace with actual calculation
 	}

@@ -6,7 +6,7 @@ import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.PIVOT_
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.Real.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +16,7 @@ public class AdjustableHoodIOReal implements AdjustableHoodIO {
 
 	private TalonFX pivotMotor;
 	private Angle hoodSetpoint;
-	private PIDController pivotController;
+	private ProfiledPIDController pivotController;
 
 	public AdjustableHoodIOReal() {
 		pivotMotor = new TalonFX(PIVOT_CAN_ID);
@@ -50,6 +50,12 @@ public class AdjustableHoodIOReal implements AdjustableHoodIO {
 
 	@Override
 	public boolean atHoodSetpoint() {
-		return pivotController.atSetpoint();
+		return (
+			Math.abs(
+				(pivotMotor.getPosition().getValueAsDouble() / GEAR_RATIO) -
+				hoodSetpoint.in(Rotations)
+			) <
+			PIVOT_TOLERANCE.in(Rotations)
+		);
 	}
 }
