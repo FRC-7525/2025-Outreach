@@ -2,6 +2,7 @@ package frc.robot.Subsystems.HoodedShooterSupersystem;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
+
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
