@@ -1,0 +1,28 @@
+name: Check Vendordep Versions
+
+on:
+  push:
+    paths:
+      - 'vendordeps/**'
+      - 'build.gradle'
+      - '.github/workflows/vendor.yml'
+  pull_request:
+    paths:
+      - 'vendordeps/**'
+      - 'build.gradle'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:  Checkout Code
+        uses: actions/checkout@v4
+
+      - name:  Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name:  Run Vendordep Version Checker
+        run: python scripts/vendor.py 
