@@ -20,10 +20,12 @@ public class IndexerIOSim implements IndexerIO {
 	private TalonFX dummyMotor = new TalonFX(IndexerConstants.INDEXER_MOTOR_CAN_ID);
 	private TalonFXSimState motorSim = dummyMotor.getSimState();
 
+	private double[] measurementStdDevs = {1.0};
+
 	private FlywheelSim flywheelSim = new FlywheelSim(
 		SIM.MOTOR_LINEAR_SYSTEM,
 		DCMotor.getKrakenX60Foc(INDEXER_MOTOR_CAN_ID),
-		null
+		measurementStdDevs
 	);
 
 	@Override
