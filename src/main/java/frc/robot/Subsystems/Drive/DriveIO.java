@@ -7,6 +7,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import org.littletonrobotics.junction.AutoLog;
 import swervelib.SwerveDrive;
+import swervelib.SwerveInputStream;
 
 public interface DriveIO {
 	@AutoLog
@@ -34,4 +35,8 @@ public interface DriveIO {
 		double timestamp,
 		Matrix<N3, N1> visionMeasurementStdDevs
 	) {}
+
+	public default SwerveInputStream getSwerveInputStream() {
+		return null;
+	}
 }

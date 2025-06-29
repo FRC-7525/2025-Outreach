@@ -56,6 +56,9 @@ public class Drive extends Subsystem<DriveStates> {
 
 		getState().driveRobot();
 
+		//TODO: Might be better as a trigger or smth idk
+		io.getSwerveInputStream().aimWhile(DRIVER_CONTROLLER::getAButton);
+
 		field.setRobotPose(getPose());
 		SmartDashboard.putData("Field", field);
 	}

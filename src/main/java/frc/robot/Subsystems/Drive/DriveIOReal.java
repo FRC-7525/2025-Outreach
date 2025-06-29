@@ -10,6 +10,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.GlobalConstants.Controllers;
+import frc.robot.Subsystems.Vision.Vision;
+
 import java.io.File;
 import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
@@ -55,6 +57,7 @@ public class DriveIOReal implements DriveIO {
 
 	@Override
 	public SwerveDrive getDrive() {
+		swerveInputs.aim(Vision.getInstance().getTargetPose(0));
 		return swerveDrive;
 	}
 
@@ -99,5 +102,10 @@ public class DriveIOReal implements DriveIO {
 	) {
 		swerveDrive.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
 		swerveDrive.updateOdometry();
+	}
+
+	@Override
+	public SwerveInputStream getSwerveInputStream() {
+		return swerveInputs;
 	}
 }
