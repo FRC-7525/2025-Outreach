@@ -21,6 +21,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	//public Drive drive;
 	private Indexer indexer;
 	private HoodedShooterSupersystem hoodedShooterSupersystem;
+
 	//private Vision vision;
 
 	public static Manager getInstance() {

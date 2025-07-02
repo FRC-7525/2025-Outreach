@@ -36,4 +36,3 @@ public enum HoodedShooterSupersystemStates implements SubsystemStates {
 		return shooterState;
 	}
 }
-

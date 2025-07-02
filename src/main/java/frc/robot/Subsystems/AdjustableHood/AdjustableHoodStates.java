@@ -29,4 +29,3 @@ public enum AdjustableHoodStates implements SubsystemStates {
 		return setpointSupplier.get();
 	}
 }
-
