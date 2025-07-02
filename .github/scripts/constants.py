@@ -61,7 +61,7 @@ def check_for_magic_numbers(file_path):
 
 def is_file_excused(file_path, project_root):
     filename = os.path.basename(file_path)
-    if filename in excused_files:
+    if filename in excused_files or 'constants' in filename.lower():
         return True
 
     relative_path = os.path.relpath(file_path, project_root)
