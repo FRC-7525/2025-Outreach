@@ -158,11 +158,24 @@ public class VisionConstants {
 		(short) 5
 	);
 
+	//Case-dependent 
+	public static final double LARGE_TAG_AREA = 0.8;
+	public static final double SMALL_TAG_AREA = 0.1; 
+	public static final double CLOSE_POSE_DIFF = 0.5; 
+	public static final double CLOSER_POSE_DIFF = 0.3;
+	public static final int VEC_BUILDER_DEGREES = 50; 
+	public static final double largeTagxyStds = 0.5;
+	public static final double farTagxyStds = 1.0; 
+	public static final double oneTagxyStds = 2.0;
+	public static final double noTagxyStds = 0.5; 
+	public static final double noTagdegStds = 6.0; 
+
 	// AKIT TEMPLATE STUFF
 
 	// Basic filtering thresholds
 	public static final double maxAmbiguity = 0.3;
 	public static final double maxZError = 0.75;
+	public static final int ONE_TAG = 1;
 	public static final AngularVelocity MAX_ANGULAR_VELOCITY = DegreesPerSecond.of(200);
 
 	// Standard deviation baselines, for 1 meter distance and 1 tag

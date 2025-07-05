@@ -154,7 +154,7 @@ public class Vision extends SubsystemBase {
 				);
 				Logger.recordOutput(
 					"Vision/Camera" + Integer.toString(cameraIndex) + "/Ambiguous",
-					(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity)
+					(observation.tagCount() == ONE_TAG && observation.ambiguity() > maxAmbiguity)
 				);
 				Logger.recordOutput(
 					"Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field X",
@@ -232,7 +232,7 @@ public class Vision extends SubsystemBase {
 	private boolean shouldBeRejected(PoseObservation observation) {
 		return (
 			observation.tagCount() == 0 || // Must have at least one tag
-			(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
+			(observation.tagCount() == ONE_TAG && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
 			Math.abs(observation.pose().getZ()) > maxZError || // Must have realistic Z coordinate
 			Math.abs(
 				Units.radiansToDegrees(
@@ -246,7 +246,7 @@ public class Vision extends SubsystemBase {
 	public Matrix<N3, N1> calculateStandardDev(PoseObservation observation) {
 		double xyStds;
 		double degStds;
-		if (observation.tagCount() == 1) {
+		if (observation.tagCount() == ONE_TAG) {
 			double poseDifference = observation
 				.pose()
 				.getTranslation()
@@ -259,19 +259,19 @@ public class Vision extends SubsystemBase {
 			// }
 
 			// 1 target with large area and close to estimated pose
-			if (observation.avgTagArea() > 0.8 && poseDifference < 0.5) {
-				xyStds = 0.5;
+			if (observation.avgTagArea() > LARGE_TAG_AREA && poseDifference < CLOSE_POSE_DIFF) {
+				xyStds = largeTagxyStds;
 			}
 			// 1 target farther away and estimated pose is close
-			else if (observation.avgTagArea() > 0.1 && poseDifference < 0.3) {
-				xyStds = 1.0;
+			else if (observation.avgTagArea() > SMALL_TAG_AREA && poseDifference < CLOSER_POSE_DIFF) {
+				xyStds = farTagxyStds;
 			} else {
-				xyStds = 2.0;
+				xyStds = oneTagxyStds;
 			}
-			return VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(50)); // I dont even know, ts so random
+			return VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(VEC_BUILDER_DEGREES)); // I dont even know, ts so random
 		} else {
-			xyStds = 0.5;
-			degStds = 6;
+			xyStds = noTagxyStds;
+			degStds = noTagdegStds;
 			return VecBuilder.fill(xyStds, xyStds, degStds);
 		}
 	}
