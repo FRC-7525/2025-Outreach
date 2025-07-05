@@ -33,7 +33,11 @@ public class VisionConstants {
 	// This is comp dependent
 	public static final boolean USE_WELDED_FIELD = true;
 
-	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(USE_WELDED_FIELD ? AprilTagFields.k2025ReefscapeWelded : AprilTagFields.k2025ReefscapeAndyMark);
+	public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(
+		USE_WELDED_FIELD
+			? AprilTagFields.k2025ReefscapeWelded
+			: AprilTagFields.k2025ReefscapeAndyMark
+	);
 
 	public record VisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> standardDev) {}
 
@@ -41,27 +45,71 @@ public class VisionConstants {
 
 	// Front Left
 	public static final String FRONT_LEFT_CAM_NAME = "Front Left Camera";
-	public static final Translation3d ROBOT_TO_FRONT_LEFT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(11.809459), Units.inchesToMeters(11.164206), Units.inchesToMeters(8.887162));
-	public static final Rotation3d ROBOT_TO_FRONT_LEFT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(-30.4));
-	public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA = new Transform3d(ROBOT_TO_FRONT_LEFT_CAMERA_TRANSLATION, ROBOT_TO_FRONT_LEFT_CAMERA_ROTATION);
+	public static final Translation3d ROBOT_TO_FRONT_LEFT_CAMERA_TRANSLATION = new Translation3d(
+		Units.inchesToMeters(11.809459),
+		Units.inchesToMeters(11.164206),
+		Units.inchesToMeters(8.887162)
+	);
+	public static final Rotation3d ROBOT_TO_FRONT_LEFT_CAMERA_ROTATION = new Rotation3d(
+		0,
+		Math.toRadians(-10),
+		Math.toRadians(-30.4)
+	);
+	public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA = new Transform3d(
+		ROBOT_TO_FRONT_LEFT_CAMERA_TRANSLATION,
+		ROBOT_TO_FRONT_LEFT_CAMERA_ROTATION
+	);
 
 	// Front Right
 	public static final String FRONT_RIGHT_CAM_NAME = "Front Right Camera";
-	public static final Translation3d ROBOT_TO_FRONT_RIGHT_CAMERA_TRANSLATION = new Translation3d(Units.inchesToMeters(11.809459), Units.inchesToMeters(-11.164206), Units.inchesToMeters(8.887162));
-	public static final Rotation3d ROBOT_TO_FRONT_RIGHT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(27.8));
-	public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA = new Transform3d(ROBOT_TO_FRONT_RIGHT_CAMERA_TRANSLATION, ROBOT_TO_FRONT_RIGHT_CAMERA_ROTATION);
+	public static final Translation3d ROBOT_TO_FRONT_RIGHT_CAMERA_TRANSLATION = new Translation3d(
+		Units.inchesToMeters(11.809459),
+		Units.inchesToMeters(-11.164206),
+		Units.inchesToMeters(8.887162)
+	);
+	public static final Rotation3d ROBOT_TO_FRONT_RIGHT_CAMERA_ROTATION = new Rotation3d(
+		0,
+		Math.toRadians(-10),
+		Math.toRadians(27.8)
+	);
+	public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA = new Transform3d(
+		ROBOT_TO_FRONT_RIGHT_CAMERA_TRANSLATION,
+		ROBOT_TO_FRONT_RIGHT_CAMERA_ROTATION
+	);
 
 	//Back Left
 	public static final String BACK_LEFT_CAM_NAME = "Back Left Camera";
-	public static final Translation3d ROBOT_TO_BACK_LEFT_CAMERA_TRALSLATION = new Translation3d(Units.inchesToMeters(-11.697), Units.inchesToMeters(11.81), Units.inchesToMeters(8.859));
-	public static final Rotation3d ROBOT_TO_BACK_LEFT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(180));
-	public static final Transform3d ROBOT_TO_BACK_LEFT_CAMERA = new Transform3d(ROBOT_TO_BACK_LEFT_CAMERA_TRALSLATION, ROBOT_TO_BACK_LEFT_CAMERA_ROTATION);
+	public static final Translation3d ROBOT_TO_BACK_LEFT_CAMERA_TRALSLATION = new Translation3d(
+		Units.inchesToMeters(-11.697),
+		Units.inchesToMeters(11.81),
+		Units.inchesToMeters(8.859)
+	);
+	public static final Rotation3d ROBOT_TO_BACK_LEFT_CAMERA_ROTATION = new Rotation3d(
+		0,
+		Math.toRadians(-10),
+		Math.toRadians(180)
+	);
+	public static final Transform3d ROBOT_TO_BACK_LEFT_CAMERA = new Transform3d(
+		ROBOT_TO_BACK_LEFT_CAMERA_TRALSLATION,
+		ROBOT_TO_BACK_LEFT_CAMERA_ROTATION
+	);
 
 	//Back Right
 	public static final String BACK_RIGHT_CAM_NAME = "Back Right Camera";
-	public static final Translation3d ROBOT_TO_BACK_RIGHT_CAMERA_TRALSLATION = new Translation3d(Units.inchesToMeters(-11.697), Units.inchesToMeters(-11.81), Units.inchesToMeters(8.859));
-	public static final Rotation3d ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION = new Rotation3d(0, Math.toRadians(-10), Math.toRadians(180));
-	public static final Transform3d ROBOT_TO_BACK_RIGHT_CAMERA = new Transform3d(ROBOT_TO_BACK_RIGHT_CAMERA_TRALSLATION, ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION);
+	public static final Translation3d ROBOT_TO_BACK_RIGHT_CAMERA_TRALSLATION = new Translation3d(
+		Units.inchesToMeters(-11.697),
+		Units.inchesToMeters(-11.81),
+		Units.inchesToMeters(8.859)
+	);
+	public static final Rotation3d ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION = new Rotation3d(
+		0,
+		Math.toRadians(-10),
+		Math.toRadians(180)
+	);
+	public static final Transform3d ROBOT_TO_BACK_RIGHT_CAMERA = new Transform3d(
+		ROBOT_TO_BACK_RIGHT_CAMERA_TRALSLATION,
+		ROBOT_TO_BACK_RIGHT_CAMERA_ROTATION
+	);
 
 	public static final double CAMERA_DEBOUNCE_TIME = 0.5;
 
@@ -81,10 +129,34 @@ public class VisionConstants {
 	public static final int LATENCY_STD_DEV_MS = 10;
 
 	//April Tag Lists
-	public static final Set<Short> SOURCE_TAGS = Set.of((short) 12, (short) 13, (short) 1, (short) 2);
-	public static final Set<Short> RED_REEF_TAGS = Set.of((short) 6, (short) 7, (short) 8, (short) 9, (short) 10, (short) 11);
-	public static final Set<Short> BLUE_REEF_TAGS = Set.of((short) 17, (short) 18, (short) 19, (short) 20, (short) 21, (short) 22);
-	public static final Set<Short> APRIL_TAG_IGNORE = Set.of((short) 14, (short) 15, (short) 4, (short) 5);
+	public static final Set<Short> SOURCE_TAGS = Set.of(
+		(short) 12,
+		(short) 13,
+		(short) 1,
+		(short) 2
+	);
+	public static final Set<Short> RED_REEF_TAGS = Set.of(
+		(short) 6,
+		(short) 7,
+		(short) 8,
+		(short) 9,
+		(short) 10,
+		(short) 11
+	);
+	public static final Set<Short> BLUE_REEF_TAGS = Set.of(
+		(short) 17,
+		(short) 18,
+		(short) 19,
+		(short) 20,
+		(short) 21,
+		(short) 22
+	);
+	public static final Set<Short> APRIL_TAG_IGNORE = Set.of(
+		(short) 14,
+		(short) 15,
+		(short) 4,
+		(short) 5
+	);
 
 	// AKIT TEMPLATE STUFF
 

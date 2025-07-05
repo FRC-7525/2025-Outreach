@@ -10,13 +10,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Subsystems.Drive.Drive;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.littletonrobotics.junction.Logger;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
@@ -47,9 +45,15 @@ public class VisionIOPhotonVision implements VisionIO {
 		for (var result : camera.getAllUnreadResults()) {
 			// Update latest target observation
 			if (result.hasTargets()) {
-				inputs.latestTargetObservation = new TargetObservation(Rotation2d.fromDegrees(result.getBestTarget().getYaw()), Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
+				inputs.latestTargetObservation = new TargetObservation(
+					Rotation2d.fromDegrees(result.getBestTarget().getYaw()),
+					Rotation2d.fromDegrees(result.getBestTarget().getPitch())
+				);
 			} else {
-				inputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
+				inputs.latestTargetObservation = new TargetObservation(
+					new Rotation2d(),
+					new Rotation2d()
+				);
 			}
 
 			// Add pose observation
@@ -59,7 +63,10 @@ public class VisionIOPhotonVision implements VisionIO {
 				// Calculate robot pose
 				Transform3d fieldToCamera = multitagResult.estimatedPose.best;
 				Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
-				Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
+				Pose3d robotPose = new Pose3d(
+					fieldToRobot.getTranslation(),
+					fieldToRobot.getRotation()
+				);
 
 				// Calculate average tag distance and avg tag area
 				double totalTagDistance = 0.0;
@@ -91,11 +98,17 @@ public class VisionIOPhotonVision implements VisionIO {
 				// Calculate robot pose
 				var tagPose = APRIL_TAG_FIELD_LAYOUT.getTagPose(target.fiducialId);
 				if (tagPose.isPresent()) {
-					Transform3d fieldToTarget = new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());
+					Transform3d fieldToTarget = new Transform3d(
+						tagPose.get().getTranslation(),
+						tagPose.get().getRotation()
+					);
 					Transform3d cameraToTarget = target.bestCameraToTarget;
 					Transform3d fieldToCamera = fieldToTarget.plus(cameraToTarget.inverse());
 					Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
-					Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
+					Pose3d robotPose = new Pose3d(
+						fieldToRobot.getTranslation(),
+						fieldToRobot.getRotation()
+					);
 
 					// Add tag ID
 					tagIds.add((short) target.fiducialId);
@@ -125,10 +138,14 @@ public class VisionIOPhotonVision implements VisionIO {
 				if (tagPose.isPresent()) {
 					//Offset from tag pose to get pose of bucket center
 					inputs.targetPose = new Pose2d(
-						tagPose.get().getX() - bucketOffset.in(Meters)*Math.cos(tagPose.get().toPose2d().getRotation().getRadians()),
-						tagPose.get().getY() - bucketOffset.in(Meters)*Math.sin(tagPose.get().toPose2d().getRotation().getRadians()),
+						tagPose.get().getX() -
+						bucketOffset.in(Meters) *
+						Math.cos(tagPose.get().toPose2d().getRotation().getRadians()),
+						tagPose.get().getY() -
+						bucketOffset.in(Meters) *
+						Math.sin(tagPose.get().toPose2d().getRotation().getRadians()),
 						new Rotation2d()
-					); 
+					);
 				}
 			} else {
 				inputs.targetPose = new Pose2d();

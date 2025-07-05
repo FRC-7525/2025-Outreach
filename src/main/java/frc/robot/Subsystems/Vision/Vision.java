@@ -46,7 +46,11 @@ public class Vision extends SubsystemBase {
 					};
 					case SIM -> new VisionIO[] {
 						//Replace w/ actual stuff once camera num and pos is figured out
-						new VisionIOPhotonVisionSim(FRONT_LEFT_CAM_NAME, ROBOT_TO_FRONT_LEFT_CAMERA, Drive.getInstance()::getPose),
+						new VisionIOPhotonVisionSim(
+							FRONT_LEFT_CAM_NAME,
+							ROBOT_TO_FRONT_LEFT_CAMERA,
+							Drive.getInstance()::getPose
+						),
 					};
 					case TESTING -> new VisionIO[] {
 						//Replace w/ actual stuff once camera num and pos is figured out
@@ -69,7 +73,10 @@ public class Vision extends SubsystemBase {
 		// Initialize disconnected alerts
 		this.disconnectedAlerts = new Alert[io.length];
 		for (int i = 0; i < inputs.length; i++) {
-			disconnectedAlerts[i] = new Alert("Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
+			disconnectedAlerts[i] = new Alert(
+				"Vision camera " + Integer.toString(i) + " is disconnected.",
+				AlertType.kWarning
+			);
 		}
 	}
 
@@ -98,10 +105,22 @@ public class Vision extends SubsystemBase {
 
 		processVision();
 		// Log summary data
-		Logger.recordOutput("Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
-		Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
-		Logger.recordOutput("Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
-		Logger.recordOutput("Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+		Logger.recordOutput(
+			"Vision/Summary/TagPoses",
+			allTagPoses.toArray(new Pose3d[allTagPoses.size()])
+		);
+		Logger.recordOutput(
+			"Vision/Summary/RobotPoses",
+			allRobotPoses.toArray(new Pose3d[allRobotPoses.size()])
+		);
+		Logger.recordOutput(
+			"Vision/Summary/RobotPosesAccepted",
+			allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()])
+		);
+		Logger.recordOutput(
+			"Vision/Summary/RobotPosesRejected",
+			allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()])
+		);
 	}
 
 	private void processVision() {
@@ -129,10 +148,24 @@ public class Vision extends SubsystemBase {
 				// Check whether to reject pose
 				boolean rejectPose = shouldBeRejected(observation);
 
-				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Tag Count", observation.tagCount() == 0);
-				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Ambiguous", (observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity));
-				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field X", observation.pose().getX() < 0.0 || observation.pose().getX() > APRIL_TAG_FIELD_LAYOUT.getFieldLength());
-				Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field Y", observation.pose().getY() < 0.0 || observation.pose().getY() > APRIL_TAG_FIELD_LAYOUT.getFieldWidth());
+				Logger.recordOutput(
+					"Vision/Camera" + Integer.toString(cameraIndex) + "/Tag Count",
+					observation.tagCount() == 0
+				);
+				Logger.recordOutput(
+					"Vision/Camera" + Integer.toString(cameraIndex) + "/Ambiguous",
+					(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity)
+				);
+				Logger.recordOutput(
+					"Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field X",
+					observation.pose().getX() < 0.0 ||
+					observation.pose().getX() > APRIL_TAG_FIELD_LAYOUT.getFieldLength()
+				);
+				Logger.recordOutput(
+					"Vision/Camera" + Integer.toString(cameraIndex) + "/Outside of Field Y",
+					observation.pose().getY() < 0.0 ||
+					observation.pose().getY() > APRIL_TAG_FIELD_LAYOUT.getFieldWidth()
+				);
 
 				// Add pose to log
 				robotPoses.add(observation.pose());
@@ -162,14 +195,32 @@ public class Vision extends SubsystemBase {
 				Matrix<N3, N1> visionStandardDev = calculateStandardDev(observation);
 
 				// Send vision observation
-				Drive.getInstance().getDrive().addVisionMeasurement(observation.pose().toPose2d(), observation.timestamp(), visionStandardDev);
+				Drive.getInstance()
+					.getDrive()
+					.addVisionMeasurement(
+						observation.pose().toPose2d(),
+						observation.timestamp(),
+						visionStandardDev
+					);
 			}
 
 			// Log camera datadata
-			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses", tagPoses.toArray(new Pose3d[tagPoses.size()]));
-			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses", robotPoses.toArray(new Pose3d[robotPoses.size()]));
-			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted", robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
-			Logger.recordOutput("Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected", robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
+			Logger.recordOutput(
+				"Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses",
+				tagPoses.toArray(new Pose3d[tagPoses.size()])
+			);
+			Logger.recordOutput(
+				"Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPoses",
+				robotPoses.toArray(new Pose3d[robotPoses.size()])
+			);
+			Logger.recordOutput(
+				"Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
+				robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()])
+			);
+			Logger.recordOutput(
+				"Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
+				robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()])
+			);
 
 			allTagPoses.addAll(tagPoses);
 			allRobotPoses.addAll(robotPoses);
@@ -183,7 +234,12 @@ public class Vision extends SubsystemBase {
 			observation.tagCount() == 0 || // Must have at least one tag
 			(observation.tagCount() == 1 && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
 			Math.abs(observation.pose().getZ()) > maxZError || // Must have realistic Z coordinate
-			Math.abs(Units.radiansToDegrees(Drive.getInstance().getDrive().getRobotVelocity().omegaRadiansPerSecond)) > MAX_ANGULAR_VELOCITY.in(DegreesPerSecond) //TODO: Might not work
+			Math.abs(
+				Units.radiansToDegrees(
+					Drive.getInstance().getDrive().getRobotVelocity().omegaRadiansPerSecond
+				)
+			) >
+			MAX_ANGULAR_VELOCITY.in(DegreesPerSecond) //TODO: Might not work
 		); // Robot must not be rotating rapidly
 	}
 
@@ -191,7 +247,11 @@ public class Vision extends SubsystemBase {
 		double xyStds;
 		double degStds;
 		if (observation.tagCount() == 1) {
-			double poseDifference = observation.pose().getTranslation().toTranslation2d().getDistance(Drive.getInstance().getPose().getTranslation());
+			double poseDifference = observation
+				.pose()
+				.getTranslation()
+				.toTranslation2d()
+				.getDistance(Drive.getInstance().getPose().getTranslation());
 
 			//TODO: Idk if this is important
 			// if (seenReefTags(observation) && observation.avgTagArea() > 0.2) {
@@ -218,5 +278,5 @@ public class Vision extends SubsystemBase {
 
 	public Pose2d getTargetPose(int camIndex) {
 		return inputs[camIndex].targetPose;
-	} 
+	}
 }

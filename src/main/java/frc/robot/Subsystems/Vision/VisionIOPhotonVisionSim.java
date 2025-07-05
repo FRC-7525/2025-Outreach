@@ -16,7 +16,11 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
 	private final Supplier<Pose2d> poseSupplier;
 	private final PhotonCameraSim cameraSim;
 
-	public VisionIOPhotonVisionSim(String name, Transform3d robotToCamera, Supplier<Pose2d> poseSupplier) {
+	public VisionIOPhotonVisionSim(
+		String name,
+		Transform3d robotToCamera,
+		Supplier<Pose2d> poseSupplier
+	) {
 		super(name, robotToCamera);
 		this.poseSupplier = poseSupplier;
 
