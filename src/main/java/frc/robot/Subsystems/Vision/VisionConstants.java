@@ -158,17 +158,17 @@ public class VisionConstants {
 		(short) 5
 	);
 
-	//Case-dependent 
+	//Case-dependent
 	public static final double LARGE_TAG_AREA = 0.8;
-	public static final double SMALL_TAG_AREA = 0.1; 
-	public static final double CLOSE_POSE_DIFF = 0.5; 
+	public static final double SMALL_TAG_AREA = 0.1;
+	public static final double CLOSE_POSE_DIFF = 0.5;
 	public static final double CLOSER_POSE_DIFF = 0.3;
-	public static final int VEC_BUILDER_DEGREES = 50; 
+	public static final int VEC_BUILDER_DEGREES = 50;
 	public static final double largeTagxyStds = 0.5;
-	public static final double farTagxyStds = 1.0; 
+	public static final double farTagxyStds = 1.0;
 	public static final double oneTagxyStds = 2.0;
-	public static final double noTagxyStds = 0.5; 
-	public static final double noTagdegStds = 6.0; 
+	public static final double noTagxyStds = 0.5;
+	public static final double noTagdegStds = 6.0;
 
 	// AKIT TEMPLATE STUFF
 

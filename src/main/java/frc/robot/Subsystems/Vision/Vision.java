@@ -263,7 +263,9 @@ public class Vision extends SubsystemBase {
 				xyStds = largeTagxyStds;
 			}
 			// 1 target farther away and estimated pose is close
-			else if (observation.avgTagArea() > SMALL_TAG_AREA && poseDifference < CLOSER_POSE_DIFF) {
+			else if (
+				observation.avgTagArea() > SMALL_TAG_AREA && poseDifference < CLOSER_POSE_DIFF
+			) {
 				xyStds = farTagxyStds;
 			} else {
 				xyStds = oneTagxyStds;
