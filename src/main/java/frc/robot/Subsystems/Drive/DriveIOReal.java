@@ -73,12 +73,10 @@ public class DriveIOReal implements DriveIO {
 				swerveInputs.scaleTranslation(SLOW_SPEED);
 				swerveInputs.scaleRotation(SLOW_SPEED);
 			}
-		} else {
-			if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
-				slow = true;
-				swerveInputs.scaleTranslation(NORMAL_SPEED);
-				swerveInputs.scaleRotation(NORMAL_SPEED);
-			}
+		} else if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
+			slow = true;
+			swerveInputs.scaleTranslation(NORMAL_SPEED);
+			swerveInputs.scaleRotation(NORMAL_SPEED);
 		}
 	}
 
