@@ -1,9 +1,9 @@
 package frc.robot.Subsystems.HoodedShooterSupersystem;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
@@ -16,6 +16,7 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 	private static HoodedShooterSupersystem instance;
 	private AdjustableHood hood;
 	private Shooter shooter;
+	private InterpolatingDoubleTreeMap hoodCalculator;
 
 	public static HoodedShooterSupersystem getInstance() {
 		if (instance == null) {
@@ -28,6 +29,10 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 		super(SUBSYSTEM_NAME, HoodedShooterSupersystemStates.IDLE);
 		hood = AdjustableHood.getInstance();
 		shooter = Shooter.getInstance();
+		hoodCalculator = new InterpolatingDoubleTreeMap();
+		for (int i = 0; i < ANGLES.length; i++) {
+			hoodCalculator.put(DISTANCES[i], ANGLES[i]);
+		}
 	}
 
 	@Override
@@ -51,12 +56,11 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 	}
 
 	public Angle calculateHoodSetpoint() {
-		// Placeholder for actual hood setpoint calculation logic
-		return Degrees.of(FAKE_VALUE); // Replace with actual calculation
+		// ZERO is placeholder for logic to get distance from the target.
+		return Degrees.of(hoodCalculator.get((double) 0));
 	}
 
 	public AngularVelocity calculateShooterSetpoint() {
-		// Placeholder for actual shooter setpoint calculation logic
-		return RotationsPerSecond.of(FAKE_VALUE_2); // Replace with actual calculation
+		return MEDIUM_SPEED;
 	}
 }
