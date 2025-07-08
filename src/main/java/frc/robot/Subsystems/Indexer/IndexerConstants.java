@@ -32,5 +32,7 @@ public class IndexerConstants {
 				1,
 				1
 			);
+
+		public static final double STDDEV = 1.0;
 	}
 }
