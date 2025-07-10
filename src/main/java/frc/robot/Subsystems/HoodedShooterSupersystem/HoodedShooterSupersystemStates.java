@@ -6,7 +6,7 @@ import org.team7525.subsystem.SubsystemStates;
 
 public enum HoodedShooterSupersystemStates implements SubsystemStates {
 	IDLE("IDLE", AdjustableHoodStates.IDLE, ShooterStates.IDLE),
-	FIXED("FIXED", AdjustableHoodStates.FIXED, ShooterStates.IDLE),
+	FIXED("FIXED", AdjustableHoodStates.FIXED, ShooterStates.FIXED),
 	DYNAMIC("DYNAMIC", AdjustableHoodStates.DYNAMIC, ShooterStates.DYNAMIC);
 
 	private final String stateString;
