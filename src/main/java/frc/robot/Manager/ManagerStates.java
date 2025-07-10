@@ -6,12 +6,7 @@ import frc.robot.Subsystems.Intake.IntakeStates;
 import org.team7525.subsystem.SubsystemStates;
 
 public enum ManagerStates implements SubsystemStates {
-	IDLE(
-		"Idle",
-		IntakeStates.IDLE,
-		IndexerState.IDLE,
-		HoodedShooterSupersystemStates.IDLE
-	),
+	IDLE("Idle", IntakeStates.IDLE, IndexerState.IDLE, HoodedShooterSupersystemStates.IDLE),
 	OUTTAKING(
 		"Outtaking",
 		IntakeStates.OUTTAKING,

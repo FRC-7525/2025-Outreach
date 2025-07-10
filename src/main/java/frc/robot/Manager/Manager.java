@@ -9,7 +9,6 @@ import frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystem;
 import frc.robot.Subsystems.Indexer.Indexer;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Vision.Vision;
-
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
@@ -21,7 +20,6 @@ public class Manager extends Subsystem<ManagerStates> {
 	private Indexer indexer;
 	private HoodedShooterSupersystem hoodedShooterSupersystem;
 	private Vision vision;
-
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -37,7 +35,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		drive = Drive.getInstance();
 		indexer = Indexer.getInstance();
 		vision = Vision.getInstance();
-
 
 		//add triggers
 		addTrigger(IDLE, OUTTAKING, DRIVER_CONTROLLER::getXButtonPressed);
@@ -66,7 +63,6 @@ public class Manager extends Subsystem<ManagerStates> {
 		intake.setState(getState().getIntakeStates());
 		hoodedShooterSupersystem.setState(getState().getHoodedShooterSupersystemStates());
 		indexer.setState(getState().getIndexerStates());
-		
 
 		hoodedShooterSupersystem.periodic();
 		indexer.periodic();
