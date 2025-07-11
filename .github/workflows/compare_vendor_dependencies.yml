@@ -32,7 +32,11 @@ jobs:
           curl -fLo pioneerslib.jar -u "FRC-7525:${GITHUB_TOKEN}" "$MAVEN_URL"
           mkdir pioneerslib_vendordeps
           unzip pioneerslib.jar "vendordeps/*" -d pioneerslib_vendordeps || echo "No vendordeps folder in jar"
-
+          
+      - name: List Files in Workspace
+        run: |
+          ls -R ${{ github.workspace }}
+  
       - name: Compare Vendordep Files
         run: |
-          python3 ../.github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_vendordeps/vendordeps
+          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_vendordeps/vendordeps
