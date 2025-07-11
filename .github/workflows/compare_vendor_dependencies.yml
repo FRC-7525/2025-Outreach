@@ -1,0 +1,32 @@
+name: Compare Vendor Dependencies
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  compare-vendordeps:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Robot Project Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Extract pioneerslib Version from build.gradle
+        id: extract_version
+        run: |
+          VERSION=$(grep -oP "com.github.FRC-7525:pioneerslib:\K[\d.]+" build.gradle | head -1)
+          echo "pioneerslib_version=$VERSION" >> $GITHUB_ENV
+
+      - name: Clone pioneerslib Maven Repo
+        run: |
+          git clone --branch ${{ env.pioneerslib_version }} https://github.com/FRC-7525/pioneerslib.git pioneerslib_repo
+
+      - name: Compare Vendordep Files
+        run: |
+          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_repo/vendordeps
