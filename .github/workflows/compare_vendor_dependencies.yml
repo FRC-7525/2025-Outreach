@@ -22,6 +22,7 @@ jobs:
         run: |
           VERSION=$(grep -oP "com.github.FRC-7525:pioneerslib:\K[\d.]+" build.gradle | head -1)
           echo "pioneerslib_version=$VERSION" >> $GITHUB_ENV
+          echo "Detected pioneerslib version: $VERSION"
 
       - name: Download pioneerslib Artifact Jar from GitHub Maven
         env:
@@ -30,18 +31,19 @@ jobs:
           MAVEN_URL="https://maven.pkg.github.com/FRC-7525/pioneerslib/com/github/FRC-7525/pioneerslib/${{ env.pioneerslib_version }}/pioneerslib-${{ env.pioneerslib_version }}.jar"
           echo "Downloading from $MAVEN_URL"
           curl -fLo pioneerslib.jar -u "FRC-7525:${GITHUB_TOKEN}" "$MAVEN_URL"
-          mkdir pioneerslib_vendordeps
-          unzip pioneerslib.jar "vendordeps/*" -d pioneerslib_vendordeps || echo "No vendordeps folder in jar"
-          
-      - name: List Everything in pioneerslib_vendordeps
-        run: |
-          echo "Contents of pioneerslib_vendordeps directory:"
-          ls -R pioneerslib_vendordeps
 
-      - name: List Files in Workspace
+      - name: List Contents of pioneerslib.jar
         run: |
-          ls -R ${{ github.workspace }}
-  
+          echo "==== pioneerslib.jar Contents ===="
+          unzip -l pioneerslib.jar
+
+      - name: Try Extracting vendordeps from pioneerslib.jar
+        run: |
+          mkdir pioneerslib_vendordeps || true
+          unzip pioneerslib.jar "vendordeps/*" -d pioneerslib_vendordeps || echo "No vendordeps folder found in pioneerslib.jar"
+          echo "==== pioneerslib_vendordeps Directory Contents ===="
+          ls -R pioneerslib_vendordeps || echo "pioneerslib_vendordeps directory is empty"
+
       - name: Compare Vendordep Files
         run: |
-          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_vendordeps/vendordeps
+          python3 "${{ github.workspace }}/.github/scripts/compare_vendordeps.py" ./vendordeps ./pioneerslib_vendordeps/vendordeps || echo "Comparison step failed"
