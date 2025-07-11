@@ -24,15 +24,15 @@ jobs:
           echo "pioneerslib_version=$VERSION" >> $GITHUB_ENV
           echo "Detected pioneerslib version: $VERSION"
 
-          - name: Download pioneerslib Vendordeps Zip from GitHub Maven
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            MAVEN_URL="https://maven.pkg.github.com/FRC-7525/pioneerslib/com/github/FRC-7525/pioneerslib/${{ env.pioneerslib_version }}/pioneerslib-${{ env.pioneerslib_version }}-vendordeps.zip"
-            echo "Downloading vendordeps zip from $MAVEN_URL"
-            curl -fLo pioneerslib-vendordeps.zip -u "FRC-7525:${GITHUB_TOKEN}" "$MAVEN_URL"
-            mkdir pioneerslib_vendordeps
-            unzip pioneerslib-vendordeps.zip -d pioneerslib_vendordeps
+      - name: Download pioneerslib Vendordeps Zip from GitHub Maven
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MAVEN_URL="https://maven.pkg.github.com/FRC-7525/pioneerslib/com/github/FRC-7525/pioneerslib/${{ env.pioneerslib_version }}/pioneerslib-${{ env.pioneerslib_version }}-vendordeps.zip"
+          echo "Downloading vendordeps zip from $MAVEN_URL"
+          curl -fLo pioneerslib-vendordeps.zip -u "FRC-7525:${GITHUB_TOKEN}" "$MAVEN_URL"
+          mkdir pioneerslib_vendordeps
+          unzip pioneerslib-vendordeps.zip -d pioneerslib_vendordeps
   
       - name: List pioneerslib vendordeps extracted files
         run: ls -R pioneerslib_vendordeps
