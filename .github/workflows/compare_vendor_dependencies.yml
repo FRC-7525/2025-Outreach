@@ -35,4 +35,5 @@ jobs:
 
       - name: Compare Vendordep Files
         run: |
-          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_vendordeps/vendordeps
+          python3 "${{ github.workspace }}/.github/scripts/compare_vendordeps.py" ./vendordeps ./pioneerslib_vendordeps/vendordeps
+
