@@ -23,10 +23,16 @@ jobs:
           VERSION=$(grep -oP "com.github.FRC-7525:pioneerslib:\K[\d.]+" build.gradle | head -1)
           echo "pioneerslib_version=$VERSION" >> $GITHUB_ENV
 
-      - name: Clone pioneerslib Maven Repo
+      - name: Download pioneerslib Artifact Jar from GitHub Maven
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone --branch ${{ env.pioneerslib_version }} https://github.com/FRC-7525/pioneerslib.git pioneerslib_repo
+          MAVEN_URL="https://maven.pkg.github.com/FRC-7525/pioneerslib/com/github/FRC-7525/pioneerslib/${{ env.pioneerslib_version }}/pioneerslib-${{ env.pioneerslib_version }}.jar"
+          echo "Downloading from $MAVEN_URL"
+          curl -fLo pioneerslib.jar -u "FRC-7525:${GITHUB_TOKEN}" "$MAVEN_URL"
+          mkdir pioneerslib_vendordeps
+          unzip pioneerslib.jar "vendordeps/*" -d pioneerslib_vendordeps || echo "No vendordeps folder in jar"
 
       - name: Compare Vendordep Files
         run: |
-          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_repo/vendordeps
+          python3 .github/scripts/compare_vendordeps.py ./vendordeps ./pioneerslib_vendordeps/vendordeps
