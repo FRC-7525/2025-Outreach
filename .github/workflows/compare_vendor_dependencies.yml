@@ -33,6 +33,11 @@ jobs:
           mkdir pioneerslib_vendordeps
           unzip pioneerslib.jar "vendordeps/*" -d pioneerslib_vendordeps || echo "No vendordeps folder in jar"
           
+      - name: List Everything in pioneerslib_vendordeps
+        run: |
+          echo "Contents of pioneerslib_vendordeps directory:"
+          ls -R pioneerslib_vendordeps
+
       - name: List Files in Workspace
         run: |
           ls -R ${{ github.workspace }}
