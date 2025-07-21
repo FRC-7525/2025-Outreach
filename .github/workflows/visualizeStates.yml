@@ -25,7 +25,7 @@ jobs:
         python3 "${{ github.workspace }}/.github/scripts/visualizeStates.py" ./src/main/java/frc/robot/Manager/ManagerStates.java ./src/main/java/frc/robot/Manager/Manager.java
 
     - name: Upload graph as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: state-machine-graph
         path: state_machine.png
