@@ -1,4 +1,4 @@
-name: Compare Vendor Dependencies
+name: Visualize States
 
 on:
   pull_request:
