@@ -1,0 +1,45 @@
+name: Compare Vendor Dependencies
+
+on:
+  pull_request:
+
+jobs:
+  generate-graph:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install networkx matplotlib
+
+    - name: Run graph generation
+      run: |
+        python3 "${{ github.workspace }}/.github/scripts/visualizeStates.py" ./src/main/java/frc/robot/Manager/ManagerStates.java ./src/main/java/frc/robot/Manager/Manager.java
+
+    - name: Upload graph as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: state-machine-graph
+        path: state_machine.png
+
+    - name: Comment on PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const prNumber = context.payload.pull_request.number;
+          const commentBody = `✅ State machine graph generated and uploaded as an artifact.\n\nYou can download it from the [Actions tab](https://github.com/${context.repo.owner}/${context.repo.repo}/actions).`;
+
+          github.rest.issues.createComment({
+            issue_number: prNumber,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: commentBody
+          })
