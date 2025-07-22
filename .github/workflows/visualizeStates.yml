@@ -1,0 +1,59 @@
+name: Visualize States
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  generate-graph:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install networkx matplotlib
+
+    - name: Run graph generation and check IDLE connections
+      id: run-script
+      run: |
+        python3 .github/scripts/visualizeStates.py ./src/main/java/frc/robot/Manager/ManagerStates.java ./src/main/java/frc/robot/Manager/Manager.java
+        echo "exit_code=$?" >> $GITHUB_OUTPUT
+      continue-on-error: true
+
+    - name: Upload graph as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: state-machine-graph
+        path: state_machine.png
+
+    - name: Comment on PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const prNumber = context.payload.pull_request.number;
+          const exitCode = Number(process.env.EXIT_CODE);
+          const commentBody = exitCode === 0
+            ? "✅ State machine graph generated and uploaded.\n\nAll states connect to IDLE."
+            : "⚠️ State machine graph generated, but some states do not connect to IDLE. Check the workflow logs and the generated graph for details.";
+
+          github.rest.issues.createComment({
+            issue_number: prNumber,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: commentBody
+          })
+      env:
+        EXIT_CODE: ${{ steps.run-script.outputs.exit_code }}
+
+    - name: Fail if states not connected to IDLE
+      if: steps.run-script.outputs.exit_code != '0'
+      run: |
+        echo "States not connected to IDLE."
+        exit 1
