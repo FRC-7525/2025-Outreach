@@ -14,6 +14,11 @@ def main(project_folder, library_folder):
 
     missing_from_project = library_files - project_files
 
+    if not library_files:
+        print("ERROR: The library folder is empty.")
+        sys.exit(3)
+
+
     if missing_from_project:
         print(f"ERROR: The following vendordep files exist in the library but are missing from the project:")
         for f in sorted(missing_from_project):
