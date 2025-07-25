@@ -40,10 +40,18 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(IDLE, OUTTAKING, DRIVER_CONTROLLER::getXButtonPressed);
 		addTrigger(INTAKE_PASSING, OUTTAKING, DRIVER_CONTROLLER::getXButtonPressed);
 		addTrigger(INTAKING, OUTTAKING, DRIVER_CONTROLLER::getXButtonPressed);
-		addTrigger(INTAKING, IDLE, () -> DRIVER_CONTROLLER.getXButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton());
+		addTrigger(
+			INTAKING,
+			IDLE,
+			() -> DRIVER_CONTROLLER.getXButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton()
+		);
 		addTrigger(OUTTAKING, IDLE, DRIVER_CONTROLLER::getXButtonPressed);
 
-		addTrigger(IDLE, FIXED_ALIGN,  () -> DRIVER_CONTROLLER.getYButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton());
+		addTrigger(
+			IDLE,
+			FIXED_ALIGN,
+			() -> DRIVER_CONTROLLER.getYButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton()
+		);
 		addTrigger(IDLE, INTAKING, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(INTAKING, INTAKE_PASSING, DRIVER_CONTROLLER::getAButtonPressed);
 		addTrigger(INTAKE_PASSING, FIXED_ALIGN, DRIVER_CONTROLLER::getAButtonPressed);
@@ -51,13 +59,22 @@ public class Manager extends Subsystem<ManagerStates> {
 		addTrigger(FIXED_ALIGN, FIXED_SHOOT, () -> hoodedShooterSupersystem.readyToShoot());
 		addTrigger(FIXED_SHOOT, IDLE, DRIVER_CONTROLLER::getAButtonPressed);
 
-		addTrigger(IDLE, DYNAMIC_ALIGN,  () -> DRIVER_CONTROLLER.getYButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton());
+		addTrigger(
+			IDLE,
+			DYNAMIC_ALIGN,
+			() -> DRIVER_CONTROLLER.getYButtonPressed() && DRIVER_CONTROLLER.getRightBumperButton()
+		);
 		addTrigger(INTAKE_PASSING, DYNAMIC_ALIGN, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(DYNAMIC_ALIGN, DYNAMIC_SHOOT, DRIVER_CONTROLLER::getYButtonPressed);
 		addTrigger(DYNAMIC_ALIGN, DYNAMIC_SHOOT, () -> hoodedShooterSupersystem.readyToShoot());
 		addTrigger(DYNAMIC_SHOOT, IDLE, DRIVER_CONTROLLER::getYButtonPressed);
 
-		addRunnableTrigger(() -> {setState(IDLE);}, DRIVER_CONTROLLER::getBButtonPressed);
+		addRunnableTrigger(
+			() -> {
+				setState(IDLE);
+			},
+			DRIVER_CONTROLLER::getBButtonPressed
+		);
 	}
 
 	@Override
