@@ -4,14 +4,13 @@ import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Manager.ManagerConstants.*;
 import static frc.robot.Manager.ManagerStates.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Drive.Drive;
 import frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystem;
 import frc.robot.Subsystems.Indexer.Indexer;
 import frc.robot.Subsystems.Intake.Intake;
-import frc.robot.Subsystems.Vision.Vision;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
-
+//import frc.robot.Subsystems.Vision.Vision;
+import frc.robot.TeamLib.subsystem.*;
 public class Manager extends Subsystem<ManagerStates> {
 
 	private static Manager instance;
@@ -19,7 +18,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	public Drive drive;
 	private Indexer indexer;
 	private HoodedShooterSupersystem hoodedShooterSupersystem;
-	private Vision vision;
+	//private Vision vision;
 
 	public static Manager getInstance() {
 		if (instance == null) {
@@ -34,7 +33,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		hoodedShooterSupersystem = HoodedShooterSupersystem.getInstance();
 		drive = Drive.getInstance();
 		indexer = Indexer.getInstance();
-		vision = Vision.getInstance();
+		//vision = Vision.getInstance();
 
 		//add triggers
 		addTrigger(IDLE, OUTTAKING, DRIVER_CONTROLLER::getXButtonPressed);
@@ -89,7 +88,7 @@ public class Manager extends Subsystem<ManagerStates> {
 		indexer.periodic();
 		intake.periodic();
 		drive.periodic();
-		vision.periodic();
+		//vision.periodic();
 	}
 
 	public boolean hasGamepiece() {
@@ -97,7 +96,7 @@ public class Manager extends Subsystem<ManagerStates> {
 	}
 
 	public void logData() {
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State Time", getStateTime());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State String", getState().getStateString());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/State Time", getStateTime());
+		SmartDashboard.putString(SUBSYSTEM_NAME + "/State String", getState().getStateString());
 	}
 }

@@ -5,7 +5,7 @@ import static frc.robot.Subsystems.Shooter.ShooterConstants.*;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import java.util.function.Supplier;
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum ShooterStates implements SubsystemStates {
 	IDLE("IDLE", () -> RotationsPerSecond.of(ZERO)),

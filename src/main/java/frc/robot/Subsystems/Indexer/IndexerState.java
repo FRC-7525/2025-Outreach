@@ -2,7 +2,7 @@ package frc.robot.Subsystems.Indexer;
 
 import static frc.robot.Subsystems.Indexer.IndexerConstants.*;
 
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum IndexerState implements SubsystemStates {
 	INTAKING("Intaking", -INTAKING_SPEED),

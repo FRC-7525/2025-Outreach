@@ -1,10 +1,10 @@
 package frc.robot.Subsystems.Shooter;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import org.littletonrobotics.junction.AutoLog;
+
 
 public interface ShooterIO {
-	@AutoLog
+	
 	public static class ShooterIOInputs {
 
 		public AngularVelocity shooterSetpoint;

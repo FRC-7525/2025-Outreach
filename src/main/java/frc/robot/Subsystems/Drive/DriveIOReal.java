@@ -2,107 +2,92 @@ package frc.robot.Subsystems.Drive;
 
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.GlobalConstants.Controllers;
-import frc.robot.Subsystems.Vision.Vision;
-import java.io.File;
-import swervelib.SwerveDrive;
-import swervelib.SwerveInputStream;
-import swervelib.parser.SwerveParser;
-import swervelib.telemetry.SwerveDriveTelemetry;
-import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import edu.wpi.first.math.util.Units;
+
+/** This drive implementation is for Talon SRXs driving brushed motors (e.g. CIMS) with encoders. */
 public class DriveIOReal implements DriveIO {
+  private static final double ticksPerRevolution = 1440;
 
-	public DriveIOInputs inputs;
+  private final TalonSRX leftLeader = new TalonSRX(leftLeaderCanId);
+  private final TalonSRX leftFollower = new TalonSRX(leftFollowerCanId);
+  private final TalonSRX rightLeader = new TalonSRX(rightLeaderCanId);
+  private final TalonSRX rightFollower = new TalonSRX(rightFollowerCanId);
 
-	private SwerveInputStream swerveInputs;
-	private final SwerveDrive swerveDrive;
-	private boolean slow;
+  public DriveIOReal() {
+    var config = new TalonSRXConfiguration();
+    config.peakCurrentLimit = currentLimit;
+    config.continuousCurrentLimit = currentLimit - 15;
+    config.peakCurrentDuration = 250;
+    config.voltageCompSaturation = 12.0;
+    config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
-	public DriveIOReal() {
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-		try {
-			File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-			swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(
-				MAX_SPEED.magnitude(),
-				new Pose2d(INIT_POSE_X, INIT_POSE_Y, Rotation2d.fromDegrees(0))
-			);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to create SwerveDrive", e);
-		}
-		swerveDrive.setMotorIdleMode(true);
+    leftLeader.configAllSettings(config);
+    leftFollower.configAllSettings(config);
+    rightLeader.configAllSettings(config);
+    rightFollower.configAllSettings(config);
 
-		swerveInputs = SwerveInputStream.of(
-			swerveDrive,
-			() -> -Controllers.DRIVER_CONTROLLER.getLeftY(),
-			() -> -Controllers.DRIVER_CONTROLLER.getLeftX()
-		)
-			.withControllerRotationAxis(() -> -Controllers.DRIVER_CONTROLLER.getRightX())
-			.allianceRelativeControl(true)
-			.driveToPoseEnabled(false);
+    leftLeader.setInverted(leftInverted);
+    rightLeader.setInverted(rightInverted);
 
-		slow = false;
-	}
+    leftFollower.follow(leftLeader);
+    rightFollower.follow(rightLeader);
+  }
 
-	@Override
-	public void updateInputs(DriveIOInputs inputs) {}
+  @Override
+  public void updateInputs(DriveIOInputs inputs) {
+    inputs.leftPositionRad =
+        Units.rotationsToRadians(leftLeader.getSelectedSensorPosition() / ticksPerRevolution);
+    inputs.leftVelocityRadPerSec =
+        Units.rotationsToRadians(
+            leftLeader.getSelectedSensorVelocity()
+                / ticksPerRevolution
+                * 10.0); // Raw units are ticks per 100ms :(
+    inputs.leftAppliedVolts = leftLeader.getMotorOutputVoltage();
+    inputs.leftCurrentAmps =
+        new double[] {leftLeader.getStatorCurrent(), leftFollower.getStatorCurrent()};
 
-	@Override
-	public SwerveDrive getDrive() {
-		swerveInputs.aim(Vision.getInstance().getTargetPose(0));
-		return swerveDrive;
-	}
+    inputs.rightPositionRad =
+        Units.rotationsToRadians(rightLeader.getSelectedSensorPosition() / ticksPerRevolution);
+    inputs.rightVelocityRadPerSec =
+        Units.rotationsToRadians(
+            rightLeader.getSelectedSensorVelocity()
+                / ticksPerRevolution
+                * 10.0); // Raw units are ticks per 100ms :(
+    inputs.rightAppliedVolts = rightLeader.getMotorOutputVoltage();
+    inputs.rightCurrentAmps =
+        new double[] {rightLeader.getStatorCurrent(), rightFollower.getStatorCurrent()};
+  }
 
-	@Override
-	public ChassisSpeeds getSwerveInputs() {
-		return swerveInputs.get();
-	}
+  @Override
+  public void setVoltage(double leftVolts, double rightVolts) {
+    // OK to just divide by 12 because voltage compensation is enabled
+    leftLeader.set(TalonSRXControlMode.PercentOutput, leftVolts / 12.0);
+    rightLeader.set(TalonSRXControlMode.PercentOutput, rightVolts / 12.0);
+  }
 
-	@Override
-	public void setSpeed() {
-		if (slow) {
-			if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
-				slow = false;
-				swerveInputs.scaleTranslation(SLOW_SPEED);
-				swerveInputs.scaleRotation(SLOW_SPEED);
-			}
-		} else if (Controllers.DRIVER_CONTROLLER.getBButtonPressed()) {
-			slow = true;
-			swerveInputs.scaleTranslation(NORMAL_SPEED);
-			swerveInputs.scaleRotation(NORMAL_SPEED);
-		}
-	}
-
-	@Override
-	public void zeroGyro() {
-		swerveDrive.resetOdometry(
-			new Pose2d(
-				swerveDrive.getPose().getX(),
-				swerveDrive.getPose().getY(),
-				Rotation2d.fromDegrees(0)
-			)
-		);
-	}
-
-	@Override
-	public void addVisionMeasurement(
-		Pose2d visionPose,
-		double timestamp,
-		Matrix<N3, N1> visionMeasurementStdDevs
-	) {
-		swerveDrive.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevs);
-		swerveDrive.updateOdometry();
-	}
-
-	@Override
-	public SwerveInputStream getSwerveInputStream() {
-		return swerveInputs;
-	}
+  @Override
+  public void setVelocity(
+      double leftRadPerSec, double rightRadPerSec, double leftFFVolts, double rightFFVolts) {
+    // OK to just divide FF by 12 because voltage compensation is enabled
+    leftLeader.set(
+        TalonSRXControlMode.Velocity,
+        Units.radiansToRotations(leftRadPerSec)
+            * ticksPerRevolution
+            / 10.0, // Raw units are ticks per 100ms :(
+        DemandType.ArbitraryFeedForward,
+        leftFFVolts / 12.0);
+    rightLeader.set(
+        TalonSRXControlMode.Velocity,
+        Units.radiansToRotations(rightRadPerSec)
+            * ticksPerRevolution
+            / 10.0, // Raw units are ticks per 100ms :(
+        DemandType.ArbitraryFeedForward,
+        rightFFVolts / 12.0);
+  }
 }

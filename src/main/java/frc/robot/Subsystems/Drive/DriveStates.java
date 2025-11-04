@@ -1,13 +1,19 @@
 package frc.robot.Subsystems.Drive;
 
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum DriveStates implements SubsystemStates {
-	FIELD_RELATIVE("Field Relative", () -> {
-		Drive.getInstance().getDrive().driveFieldOriented(Drive.getInstance().getSwerveInputs());
+	ARCADE_DRIVE("Arcade Drive", () -> {
+        Drive.getInstance().arcadeDrive(
+			Drive.getInstance().getController().getLeftY(),
+			Drive.getInstance().getController().getRightX()
+		);
 	}),
-	ROBOT_RELATIVE("Robot Relative", () -> {
-		Drive.getInstance().getDrive().drive(Drive.getInstance().getSwerveInputs());
+	TANK_DRIVE("Tank Drive", () -> {
+		Drive.getInstance().tankDrive(
+			Drive.getInstance().getController().getLeftY(),
+			Drive.getInstance().getController().getRightY()
+		);
 	});
 
 	private String stateString;

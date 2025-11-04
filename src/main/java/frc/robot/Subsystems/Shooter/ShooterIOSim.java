@@ -56,9 +56,8 @@ public class ShooterIOSim implements ShooterIO {
 		flywheelSetpoint = setpoint;
 		flywheelSim.setInputVoltage(
 			flywheelController.calculate(
-				Units.radiansToRotations(flywheelSim.getAngularVelocityRadPerSec()),
-				flywheelSetpoint.in(RotationsPerSecond)
-			)
+				flywheelSetpoint.in(RotationsPerSecond)			
+				)
 		);
 	}
 

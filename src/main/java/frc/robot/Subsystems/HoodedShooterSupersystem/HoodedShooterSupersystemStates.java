@@ -2,7 +2,7 @@ package frc.robot.Subsystems.HoodedShooterSupersystem;
 
 import frc.robot.Subsystems.AdjustableHood.AdjustableHoodStates;
 import frc.robot.Subsystems.Shooter.ShooterStates;
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum HoodedShooterSupersystemStates implements SubsystemStates {
 	IDLE("IDLE", AdjustableHoodStates.IDLE, ShooterStates.IDLE),

@@ -4,10 +4,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Subsystems.Indexer.IndexerConstants.MAX_VOLTAGE;
 import static frc.robot.Subsystems.Indexer.IndexerConstants.SUBSYSTEM_NAME;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IndexerIOTalon implements IndexerIO {
 
@@ -49,13 +48,13 @@ public class IndexerIOTalon implements IndexerIO {
 
 	@Override
 	public void logInfo() {
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
-		Logger.recordOutput(
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
+		SmartDashboard.putNumber(
 			SUBSYSTEM_NAME + "/Input Voltage",
 			motor.getMotorVoltage().getValueAsDouble()
 		);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
 	}
 
 	public void setBallCount(int count) { //only used in sim

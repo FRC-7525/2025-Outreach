@@ -1,103 +1,203 @@
+// Copyright (c) 2021-2025 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by a BSD
+// license that can be found in the LICENSE file
+// at the root directory of this project.
+
 package frc.robot.Subsystems.Drive;
 
-import static frc.robot.GlobalConstants.*;
-import static frc.robot.GlobalConstants.Controllers.*;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
-import static frc.robot.Subsystems.Drive.DriveStates.*;
-
-import com.ctre.phoenix6.sim.ChassisReference;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.GlobalConstants;
+import frc.robot.GlobalConstants.RobotMode;
 import frc.robot.Subsystems.Drive.DriveIO.DriveIOInputs;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
-import swervelib.SwerveDrive;
-import swervelib.SwerveInputStream;
+import frc.robot.Subsystems.Drive.GyroIO.GyroIOInputs;
+import frc.robot.TeamLib.subsystem.*;
 
 public class Drive extends Subsystem<DriveStates> {
+  private static Drive instance;
+  private final DriveIO io;
+  private final DriveIOInputs inputs = new DriveIOInputs();
+  private final GyroIO gyroIO;
+  private final GyroIOInputs gyroInputs = new GyroIOInputs();
+  private final DifferentialDriveKinematics kinematics =
+      new DifferentialDriveKinematics(trackWidth);
+  private final double kS = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? simKs : realKs;
+  private final double kV = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? simKv : realKv;
+  private final DifferentialDrivePoseEstimator poseEstimator =
+      new DifferentialDrivePoseEstimator(kinematics, Rotation2d.kZero, 0.0, 0.0, Pose2d.kZero);
+  private Rotation2d rawGyroRotation = Rotation2d.kZero;
+  private double lastLeftPositionMeters = 0.0;
+  private double lastRightPositionMeters = 0.0;
+  private XboxController controller = new XboxController(0);
 
-	private static Drive instance;
+  private Drive(DriveIO io, GyroIO gyroIO) {
+	super("Drive", DriveStates.TANK_DRIVE);
+    this.io = io;
+    this.gyroIO = gyroIO;
+    // Configure SysId
+  }
+  public XboxController getController() {
+	  return controller;
+  }
 
-	private DriveIO io;
-	private DriveIOInputsAutoLogged inputs;
-	public boolean slow;
-
-	private final Field2d field;
-
-	public static Drive getInstance() {
-		if (instance == null) {
-			DriveIO driveIO =
-				switch (ROBOT_MODE) {
-					case REAL -> new DriveIOReal();
-					case SIM -> new DriveIOSim();
-					case TESTING -> new DriveIOReal();
-				};
-			instance = new Drive(driveIO);
+  public static Drive getInstance() {
+	if (instance == null) {
+		switch (GlobalConstants.ROBOT_MODE) {
+			case REAL:
+				instance = new Drive(new DriveIOReal(), new GyroIOReal());
+				break;
+			case SIM:
+				instance = new Drive(new DriveIOSim(), new GyroIO() {});
+				break;
+			case TESTING:
+				instance = new Drive(new DriveIOReal(), new GyroIOReal());
+				break;
+			default:
+				throw new IllegalStateException("Unexpected value: " + GlobalConstants.ROBOT_MODE);
 		}
-		return instance;
 	}
+	return instance;
+  }
 
-	private Drive(DriveIO io) {
-		super("Drive", DriveStates.FIELD_RELATIVE);
-		this.io = io;
+  @Override
+  public void runState() {
+    io.updateInputs(inputs);
+    gyroIO.updateInputs(gyroInputs);
+	getState().driveRobot();
 
-		field = new Field2d();
-		inputs = new DriveIOInputsAutoLogged();
-	}
+    // Update gyro angle
+    if (gyroInputs.connected) {
+      // Use the real gyro angle
+      rawGyroRotation = gyroInputs.yawPosition;
+    } else {
+      // Use the angle delta from the kinematics and module deltas
+      Twist2d twist =
+          kinematics.toTwist2d(
+              getLeftPositionMeters() - lastLeftPositionMeters,
+              getRightPositionMeters() - lastRightPositionMeters);
+      rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
+      lastLeftPositionMeters = getLeftPositionMeters();
+      lastRightPositionMeters = getRightPositionMeters();
+    }
 
-	@Override
-	public void runState() {
-		io.updateInputs(inputs);
-		Logger.processInputs("Drive", inputs);
-		logOutputs();
-		setSpeed();
+    // Update odometry
+    poseEstimator.update(rawGyroRotation, getLeftPositionMeters(), getRightPositionMeters());
+  }
 
-		getState().driveRobot();
+  /** Runs the drive at the desired velocity. */
+  public void runClosedLoop(ChassisSpeeds speeds) {
+    var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+    runClosedLoop(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+  }
 
-		//TODO: Might be better as a trigger or smth idk
-		io.getSwerveInputStream().aimWhile(DRIVER_CONTROLLER::getAButton);
+  /** Runs the drive at the desired left and right velocities. */
+  public void runClosedLoop(double leftMetersPerSec, double rightMetersPerSec) {
+    double leftRadPerSec = leftMetersPerSec / wheelRadiusMeters;
+    double rightRadPerSec = rightMetersPerSec / wheelRadiusMeters;
+    SmartDashboard.putNumber("Drive/LeftSetpointRadPerSec", leftRadPerSec);
+    SmartDashboard.putNumber("Drive/RightSetpointRadPerSec", rightRadPerSec);
 
-		field.setRobotPose(getPose());
-		SmartDashboard.putData("Field", field);
-	}
+    double leftFFVolts = kS * Math.signum(leftRadPerSec) + kV * leftRadPerSec;
+    double rightFFVolts = kS * Math.signum(rightRadPerSec) + kV * rightRadPerSec;
+    io.setVelocity(leftRadPerSec, rightRadPerSec, leftFFVolts, rightFFVolts);
+  }
 
-	public void logOutputs() {
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Pose", getPose());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Drive State", getState());
-	}
+  /** Runs the drive in open loop. */
+  public void runOpenLoop(double leftVolts, double rightVolts) {
+    io.setVoltage(leftVolts, rightVolts);
+  }
 
-	public void establishTriggers() {
-		addTrigger(FIELD_RELATIVE, ROBOT_RELATIVE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
-		addTrigger(ROBOT_RELATIVE, FIELD_RELATIVE, DRIVER_CONTROLLER::getRightBumperButtonPressed);
+  /** Stops the drive. */
+  public void stop() {
+    runOpenLoop(0.0, 0.0);
+  }
+  
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+		  double left = MathUtil.applyDeadband(leftSpeed, 0.02);
+		  double right = MathUtil.applyDeadband(rightSpeed, 0.02);
 
-		addRunnableTrigger(
-			() -> {
-				io.zeroGyro();
-			},
-			DRIVER_CONTROLLER::getLeftBumperButtonPressed
-		);
-	}
 
-	public void setSpeed() {
-		io.setSpeed();
-	}
+		  runClosedLoop(left * maxSpeedMetersPerSec, right * maxSpeedMetersPerSec);
+  }
 
-	public void zeroGyro() {
-		io.zeroGyro();
-	}
+  public void arcadeDrive(double forward, double rotation) {
+          double x = MathUtil.applyDeadband(forward, 0.02);
+          double z = MathUtil.applyDeadband(rotation, 0.02);
 
-	//stuff
-	public Pose2d getPose() {
-		return io.getDrive().getPose();
-	}
+          // Calculate speeds
+          var speeds = DifferentialDrive.arcadeDriveIK(x, z, true);
 
-	public SwerveDrive getDrive() {
-		return io.getDrive();
-	}
+          // Apply output
+          runClosedLoop(speeds.left * maxSpeedMetersPerSec, speeds.right * maxSpeedMetersPerSec);
+  }
 
-	public ChassisSpeeds getSwerveInputs() {
-		return io.getSwerveInputs();
-	}
+  /** Returns the current odometry pose. */
+  
+  public Pose2d getPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  /** Returns the current odometry rotation. */
+  public Rotation2d getRotation() {
+    return getPose().getRotation();
+  }
+
+  /** Resets the current odometry pose. */
+  public void setPose(Pose2d pose) {
+    poseEstimator.resetPosition(
+        rawGyroRotation, getLeftPositionMeters(), getRightPositionMeters(), pose);
+  }
+
+  /**
+   * Adds a vision measurement to the pose estimator.
+   *
+   * @param visionPose The pose of the robot as measured by the vision camera.
+   * @param timestamp The timestamp of the vision measurement in seconds.
+   */
+  public void addVisionMeasurement(Pose2d visionPose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevMeters) {
+    poseEstimator.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevMeters);
+  }
+
+  /** Returns the position of the left wheels in meters. */
+  
+  public double getLeftPositionMeters() {
+    return inputs.leftPositionRad * wheelRadiusMeters;
+  }
+
+  /** Returns the position of the right wheels in meters. */
+  
+  public double getRightPositionMeters() {
+    return inputs.rightPositionRad * wheelRadiusMeters;
+  }
+
+  /** Returns the velocity of the left wheels in meters/second. */
+  
+  public double getLeftVelocityMetersPerSec() {
+    return inputs.leftVelocityRadPerSec * wheelRadiusMeters;
+  }
+
+  /** Returns the velocity of the right wheels in meters/second. */
+  
+  public double getRightVelocityMetersPerSec() {
+    return inputs.rightVelocityRadPerSec * wheelRadiusMeters;
+  }
+
+  /** Returns the average velocity in radians/second. */
+  public double getCharacterizationVelocity() {
+    return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
+  }
 }

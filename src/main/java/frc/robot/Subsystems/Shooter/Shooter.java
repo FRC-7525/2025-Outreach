@@ -4,13 +4,14 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.Shooter.ShooterConstants.SUBSYSTEM_NAME;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.Shooter.ShooterIO.ShooterIOInputs;
+import frc.robot.TeamLib.subsystem.*;
 
 public class Shooter extends Subsystem<ShooterStates> {
 
 	private ShooterIO io;
-	private ShooterIOInputsAutoLogged inputs;
+	private ShooterIOInputs inputs;
 	private AngularVelocity dynamicSetpoint;
 	private static Shooter instance;
 
@@ -31,7 +32,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 	private Shooter(ShooterIO io) {
 		super(SUBSYSTEM_NAME, ShooterStates.IDLE);
 		this.io = io;
-		inputs = new ShooterIOInputsAutoLogged();
+		inputs = new ShooterIOInputs();
 	}
 
 	@Override
@@ -43,8 +44,7 @@ public class Shooter extends Subsystem<ShooterStates> {
 		}
 
 		io.updateInputs(inputs);
-		Logger.processInputs("Shooter Inputs", inputs);
-		Logger.recordOutput("Shooter/State", getState().getStateString());
+		SmartDashboard.putString("Shooter/State", getState().getStateString());
 	}
 
 	public boolean atSetpoint() {
