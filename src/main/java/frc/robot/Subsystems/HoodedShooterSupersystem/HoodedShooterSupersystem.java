@@ -4,16 +4,18 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemConstants.*;
-import java.util.List;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
 import frc.robot.Subsystems.Shooter.Shooter;
+import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.team7525.subsystem.Subsystem;
 
 class ShooterDataPoint {
+
 	private AngularVelocity speed;
 	private Angle angle;
 	private Distance distance;
@@ -66,7 +68,7 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 	public void runState() {
 		hood.setState(getState().getAdjustableHoodState());
 		shooter.setState(getState().getShooterState());
-		if (getState() == HoodedShooterSupersystemStates.DYNAMIC){
+		if (getState() == HoodedShooterSupersystemStates.DYNAMIC) {
 			currentShot = interpolateShotValues(Limelight.getInstance().getDistanceToTarget());
 		}
 
@@ -91,23 +93,29 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 			ShooterDataPoint s1 = shots.get(i);
 			ShooterDataPoint s2 = shots.get(i + 1);
 
-			if (targetDistance.in(Meters) >= s1.getDistance().in(Meters) && targetDistance.in(Meters) <= s2.getDistance().in(Meters)) {
-				
-				double ratio = (targetDistance.in(Meters) - s1.getDistance().in(Meters)) / 
+			if (
+				targetDistance.in(Meters) >= s1.getDistance().in(Meters) &&
+				targetDistance.in(Meters) <= s2.getDistance().in(Meters)
+			) {
+				double ratio =
+					(targetDistance.in(Meters) - s1.getDistance().in(Meters)) /
 					(s2.getDistance().in(Meters) - s1.getDistance().in(Meters));
 				// Interpolate speed
-				double interpolatedSpeedValue = s1.getDistance().in(Meters)
-						+ ratio * (s1.getSpeed().in(RotationsPerSecond) - s1.getSpeed().in(RotationsPerSecond));
+				double interpolatedSpeedValue =
+					s1.getDistance().in(Meters) +
+					ratio *
+					(s1.getSpeed().in(RotationsPerSecond) - s1.getSpeed().in(RotationsPerSecond));
 				AngularVelocity interpolatedSpeed = RotationsPerSecond.of(interpolatedSpeedValue);
 				// Interpolate angle
-				double interpolatedAngleValue = s1.getAngle().in(Degrees)
-						+ ratio * (s2.getAngle().in(Degrees) - s1.getAngle().in(Degrees));
+				double interpolatedAngleValue =
+					s1.getAngle().in(Degrees) +
+					ratio * (s2.getAngle().in(Degrees) - s1.getAngle().in(Degrees));
 				Angle interpolatedAngle = Degrees.of(interpolatedAngleValue);
 
 				// Set states
 				return new ShooterDataPoint(interpolatedSpeed, interpolatedAngle, targetDistance); // Successful interpolation
 			}
 		}
-				return null;
+		return null;
 	}
 }

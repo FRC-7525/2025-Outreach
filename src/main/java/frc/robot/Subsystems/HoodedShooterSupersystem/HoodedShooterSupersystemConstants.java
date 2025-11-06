@@ -3,9 +3,9 @@ package frc.robot.Subsystems.HoodedShooterSupersystem;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import java.util.List;
 
 import edu.wpi.first.units.measure.AngularVelocity;
+import java.util.List;
 
 public class HoodedShooterSupersystemConstants {
 
