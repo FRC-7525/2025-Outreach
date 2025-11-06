@@ -1,9 +1,9 @@
 package frc.robot.Subsystems.Intake;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
+
 import frc.robot.Subsystems.Intake.IntakeIO.IntakeIOInputs;
 import frc.robot.TeamLib.subsystem.*;
-
 
 public class Intake extends Subsystem<IntakeStates> {
 

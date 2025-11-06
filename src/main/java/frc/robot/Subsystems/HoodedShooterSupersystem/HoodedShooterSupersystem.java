@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
 import frc.robot.Subsystems.Shooter.Shooter;
 import frc.robot.TeamLib.subsystem.*;
+
 public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystemStates> {
 
 	private static HoodedShooterSupersystem instance;

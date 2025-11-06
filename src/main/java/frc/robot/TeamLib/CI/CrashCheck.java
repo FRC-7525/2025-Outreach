@@ -31,7 +31,7 @@ public class CrashCheck extends IterativeRobotBase {
 				getRobot().disabledPeriodic();
 			},
 			() -> {
-			    getRobot().disabledInit();
+				getRobot().disabledInit();
 			},
 			() -> {
 				getRobot().disabledExit();
@@ -107,7 +107,7 @@ public class CrashCheck extends IterativeRobotBase {
 	}
 
 	public CrashCheck(IterativeRobotBase robot) {
-		super(0.02); 
+		super(0.02);
 		CrashCheck.robot = robot;
 		HAL.initialize(500, 0);
 

@@ -2,9 +2,7 @@ package frc.robot.Subsystems.AdjustableHood;
 
 import edu.wpi.first.units.measure.Angle;
 
-
 public interface AdjustableHoodIO {
-	
 	public static class AdjustableHoodIOInputs {
 
 		public Angle hoodSetpoint;
