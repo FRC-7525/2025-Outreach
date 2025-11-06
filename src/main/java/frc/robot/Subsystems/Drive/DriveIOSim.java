@@ -37,11 +37,12 @@ public class DriveIOSim implements DriveIO {
 				rightPID.calculate(sim.getRightVelocityMetersPerSecond() / WHEEL_RADIUS_METERS);
 		}
 
-    // Update simulation state
-    sim.setInputs(
-        MathUtil.clamp(leftAppliedVolts, -VOLTAGE_COMPENSATION, VOLTAGE_COMPENSATION),
-        MathUtil.clamp(rightAppliedVolts, -VOLTAGE_COMPENSATION, VOLTAGE_COMPENSATION));
-    sim.update(SIM_UPDATE_PERIOD_SEC);
+		// Update simulation state
+		sim.setInputs(
+			MathUtil.clamp(leftAppliedVolts, -VOLTAGE_COMPENSATION, VOLTAGE_COMPENSATION),
+			MathUtil.clamp(rightAppliedVolts, -VOLTAGE_COMPENSATION, VOLTAGE_COMPENSATION)
+		);
+		sim.update(SIM_UPDATE_PERIOD_SEC);
 
 		inputs.leftPositionRad = sim.getLeftPositionMeters() / WHEEL_RADIUS_METERS;
 		inputs.leftVelocityRadPerSec = sim.getLeftVelocityMetersPerSecond() / WHEEL_RADIUS_METERS;
