@@ -14,15 +14,15 @@ import edu.wpi.first.math.util.Units;
 public class DriveIOReal implements DriveIO {
   private static final double ticksPerRevolution = 1440;
 
-  private final TalonSRX leftLeader = new TalonSRX(leftLeaderCanId);
-  private final TalonSRX leftFollower = new TalonSRX(leftFollowerCanId);
-  private final TalonSRX rightLeader = new TalonSRX(rightLeaderCanId);
-  private final TalonSRX rightFollower = new TalonSRX(rightFollowerCanId);
+  private final TalonSRX leftLeader = new TalonSRX(LEFT_LEADER_CAN_ID);
+  private final TalonSRX leftFollower = new TalonSRX(LEFT_FOLLOWER_CAN_ID);
+  private final TalonSRX rightLeader = new TalonSRX(RIGHT_LEADER_CAN_ID);
+  private final TalonSRX rightFollower = new TalonSRX(RIGHT_FOLLOWER_CAN_ID);
 
   public DriveIOReal() {
     var config = new TalonSRXConfiguration();
-    config.peakCurrentLimit = currentLimit;
-    config.continuousCurrentLimit = currentLimit - 15;
+    config.peakCurrentLimit = CURRENT_LIMIT;
+    config.continuousCurrentLimit = CURRENT_LIMIT - 15;
     config.peakCurrentDuration = 250;
     config.voltageCompSaturation = 12.0;
     config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
@@ -32,8 +32,8 @@ public class DriveIOReal implements DriveIO {
     rightLeader.configAllSettings(config);
     rightFollower.configAllSettings(config);
 
-    leftLeader.setInverted(leftInverted);
-    rightLeader.setInverted(rightInverted);
+    leftLeader.setInverted(LEFT_INVERTED);
+    rightLeader.setInverted(RIGHT_INVERTED);
 
     leftFollower.follow(leftLeader);
     rightFollower.follow(rightLeader);

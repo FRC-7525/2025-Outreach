@@ -1,10 +1,3 @@
-// Copyright (c) 2021-2025 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot.Subsystems.Drive;
 
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
@@ -34,9 +27,9 @@ public class Drive extends Subsystem<DriveStates> {
   private final GyroIO gyroIO;
   private final GyroIOInputs gyroInputs = new GyroIOInputs();
   private final DifferentialDriveKinematics kinematics =
-      new DifferentialDriveKinematics(trackWidth);
-  private final double kS = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? simKs : realKs;
-  private final double kV = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? simKv : realKv;
+      new DifferentialDriveKinematics(TRACK_WIDTH);
+  private final double kS = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KS : REAL_KS;
+  private final double kV = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KV : REAL_KV;
   private final DifferentialDrivePoseEstimator poseEstimator =
       new DifferentialDrivePoseEstimator(kinematics, Rotation2d.kZero, 0.0, 0.0, Pose2d.kZero);
   private Rotation2d rawGyroRotation = Rotation2d.kZero;
@@ -44,40 +37,43 @@ public class Drive extends Subsystem<DriveStates> {
   private double lastRightPositionMeters = 0.0;
   private XboxController controller = new XboxController(0);
 
+  private boolean slowMode = false; // Slow mode variable
+
   private Drive(DriveIO io, GyroIO gyroIO) {
-	super("Drive", DriveStates.TANK_DRIVE);
+    super("Drive", DriveStates.TANK_DRIVE);
     this.io = io;
     this.gyroIO = gyroIO;
     // Configure SysId
   }
+
   public XboxController getController() {
-	  return controller;
+    return controller;
   }
 
   public static Drive getInstance() {
-	if (instance == null) {
-		switch (GlobalConstants.ROBOT_MODE) {
-			case REAL:
-				instance = new Drive(new DriveIOReal(), new GyroIOReal());
-				break;
-			case SIM:
-				instance = new Drive(new DriveIOSim(), new GyroIO() {});
-				break;
-			case TESTING:
-				instance = new Drive(new DriveIOReal(), new GyroIOReal());
-				break;
-			default:
-				throw new IllegalStateException("Unexpected value: " + GlobalConstants.ROBOT_MODE);
-		}
-	}
-	return instance;
+    if (instance == null) {
+      switch (GlobalConstants.ROBOT_MODE) {
+        case REAL:
+          instance = new Drive(new DriveIOReal(), new GyroIOReal());
+          break;
+        case SIM:
+          instance = new Drive(new DriveIOSim(), new GyroIO() {});
+          break;
+        case TESTING:
+          instance = new Drive(new DriveIOReal(), new GyroIOReal());
+          break;
+        default:
+          throw new IllegalStateException("Unexpected value: " + GlobalConstants.ROBOT_MODE);
+      }
+    }
+    return instance;
   }
 
   @Override
   public void runState() {
     io.updateInputs(inputs);
     gyroIO.updateInputs(gyroInputs);
-	getState().driveRobot();
+    getState().driveRobot();
 
     // Update gyro angle
     if (gyroInputs.connected) {
@@ -106,8 +102,8 @@ public class Drive extends Subsystem<DriveStates> {
 
   /** Runs the drive at the desired left and right velocities. */
   public void runClosedLoop(double leftMetersPerSec, double rightMetersPerSec) {
-    double leftRadPerSec = leftMetersPerSec / wheelRadiusMeters;
-    double rightRadPerSec = rightMetersPerSec / wheelRadiusMeters;
+    double leftRadPerSec = leftMetersPerSec / WHEEL_RADIUS_METERS;
+    double rightRadPerSec = rightMetersPerSec / WHEEL_RADIUS_METERS;
     SmartDashboard.putNumber("Drive/LeftSetpointRadPerSec", leftRadPerSec);
     SmartDashboard.putNumber("Drive/RightSetpointRadPerSec", rightRadPerSec);
 
@@ -125,28 +121,27 @@ public class Drive extends Subsystem<DriveStates> {
   public void stop() {
     runOpenLoop(0.0, 0.0);
   }
-  
+
   public void tankDrive(double leftSpeed, double rightSpeed) {
-		  double left = MathUtil.applyDeadband(leftSpeed, 0.02);
-		  double right = MathUtil.applyDeadband(rightSpeed, 0.02);
+    double left = MathUtil.applyDeadband(leftSpeed, 0.02);
+    double right = MathUtil.applyDeadband(rightSpeed, 0.02);
 
-
-		  runClosedLoop(left * maxSpeedMetersPerSec, right * maxSpeedMetersPerSec);
+    runClosedLoop(left * MAX_SPEED_METERS_PER_SEC, right * MAX_SPEED_METERS_PER_SEC);
   }
 
   public void arcadeDrive(double forward, double rotation) {
-          double x = MathUtil.applyDeadband(forward, 0.02);
-          double z = MathUtil.applyDeadband(rotation, 0.02);
+    double x = MathUtil.applyDeadband(forward, 0.02);
+    double z = MathUtil.applyDeadband(rotation, 0.02);
 
-          // Calculate speeds
-          var speeds = DifferentialDrive.arcadeDriveIK(x, z, true);
+    // Calculate speeds
+    var speeds = DifferentialDrive.arcadeDriveIK(x, z, true);
 
-          // Apply output
-          runClosedLoop(speeds.left * maxSpeedMetersPerSec, speeds.right * maxSpeedMetersPerSec);
+    // Apply output
+    runClosedLoop(speeds.left * MAX_SPEED_METERS_PER_SEC, speeds.right * MAX_SPEED_METERS_PER_SEC);
   }
 
   /** Returns the current odometry pose. */
-  
+
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
   }
@@ -173,31 +168,45 @@ public class Drive extends Subsystem<DriveStates> {
   }
 
   /** Returns the position of the left wheels in meters. */
-  
+
   public double getLeftPositionMeters() {
-    return inputs.leftPositionRad * wheelRadiusMeters;
+    return inputs.leftPositionRad * WHEEL_RADIUS_METERS;
   }
 
   /** Returns the position of the right wheels in meters. */
-  
+
   public double getRightPositionMeters() {
-    return inputs.rightPositionRad * wheelRadiusMeters;
+    return inputs.rightPositionRad * WHEEL_RADIUS_METERS;
   }
 
   /** Returns the velocity of the left wheels in meters/second. */
-  
+
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRadPerSec * wheelRadiusMeters;
+    return inputs.leftVelocityRadPerSec * WHEEL_RADIUS_METERS;
+  }
+
+  public double getAngularVelocityRadPerSec() {
+    return gyroInputs.yawVelocityRadPerSec;
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
-  
+
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRadPerSec * wheelRadiusMeters;
+    return inputs.rightVelocityRadPerSec * WHEEL_RADIUS_METERS;
   }
 
   /** Returns the average velocity in radians/second. */
   public double getCharacterizationVelocity() {
     return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
+  }
+
+  /** Returns true if slow mode is enabled. */
+  public boolean isSlowMode() {
+    return slowMode;
+  }
+
+  // Optionally, you may want to add a setter for slow mode:
+  public void setSlowMode(boolean enabled) {
+    slowMode = enabled;
   }
 }

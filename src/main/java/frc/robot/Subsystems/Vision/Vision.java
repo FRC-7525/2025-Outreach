@@ -234,7 +234,7 @@ public class Vision extends SubsystemBase {
 			Math.abs(observation.pose().getZ()) > maxZError || // Must have realistic Z coordinate
 			Math.abs(
 				Units.radiansToDegrees(
-					Drive.getInstance().getLeftVelocityMetersPerSec() - Drive.getInstance().getRightVelocityMetersPerSec()
+					Drive.getInstance().getAngularVelocityRadPerSec()
 				)
 			) >
 			MAX_ANGULAR_VELOCITY.in(DegreesPerSecond) //TODO: Might not work

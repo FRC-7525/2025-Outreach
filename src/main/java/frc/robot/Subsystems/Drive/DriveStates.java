@@ -4,16 +4,24 @@ import frc.robot.TeamLib.subsystem.*;
 
 public enum DriveStates implements SubsystemStates {
 	ARCADE_DRIVE("Arcade Drive", () -> {
-        Drive.getInstance().arcadeDrive(
-			Drive.getInstance().getController().getLeftY(),
-			Drive.getInstance().getController().getRightX()
-		);
+        Drive drive = Drive.getInstance();
+        double forward = drive.getController().getLeftY();
+        double rotation = drive.getController().getRightX();
+        if (drive.isSlowMode()) {
+            forward *= 0.3;
+            rotation *= 0.3;
+        }
+        drive.arcadeDrive(forward, rotation);
 	}),
 	TANK_DRIVE("Tank Drive", () -> {
-		Drive.getInstance().tankDrive(
-			Drive.getInstance().getController().getLeftY(),
-			Drive.getInstance().getController().getRightY()
-		);
+        Drive drive = Drive.getInstance();
+        double left = drive.getController().getLeftY();
+        double right = drive.getController().getRightY();
+        if (drive.isSlowMode()) {
+            left *= 0.3;
+            right *= 0.3;
+        }
+        drive.tankDrive(left, right);
 	});
 
 	private String stateString;

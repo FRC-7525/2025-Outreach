@@ -17,8 +17,8 @@ public class DriveIOSim implements DriveIO {
   private double leftAppliedVolts = 0.0;
   private double rightAppliedVolts = 0.0;
   private boolean closedLoop = false;
-  private PIDController leftPID = new PIDController(simKp, 0.0, simKd);
-  private PIDController rightPID = new PIDController(simKp, 0.0, simKd);
+  private PIDController leftPID = new PIDController(SIM_KP, 0.0, SIM_KD);
+  private PIDController rightPID = new PIDController(SIM_KP, 0.0, SIM_KD);
   private double leftFFVolts = 0.0;
   private double rightFFVolts = 0.0;
 
@@ -26,10 +26,10 @@ public class DriveIOSim implements DriveIO {
   public void updateInputs(DriveIOInputs inputs) {
     if (closedLoop) {
       leftAppliedVolts =
-          leftFFVolts + leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / wheelRadiusMeters);
+          leftFFVolts + leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / WHEEL_RADIUS_METERS);
       rightAppliedVolts =
           rightFFVolts
-              + rightPID.calculate(sim.getRightVelocityMetersPerSecond() / wheelRadiusMeters);
+              + rightPID.calculate(sim.getRightVelocityMetersPerSecond() / WHEEL_RADIUS_METERS);
     }
 
     // Update simulation state
@@ -38,13 +38,13 @@ public class DriveIOSim implements DriveIO {
         MathUtil.clamp(rightAppliedVolts, -12.0, 12.0));
     sim.update(0.02);
 
-    inputs.leftPositionRad = sim.getLeftPositionMeters() / wheelRadiusMeters;
-    inputs.leftVelocityRadPerSec = sim.getLeftVelocityMetersPerSecond() / wheelRadiusMeters;
+    inputs.leftPositionRad = sim.getLeftPositionMeters() / WHEEL_RADIUS_METERS;
+    inputs.leftVelocityRadPerSec = sim.getLeftVelocityMetersPerSecond() / WHEEL_RADIUS_METERS;
     inputs.leftAppliedVolts = leftAppliedVolts;
     inputs.leftCurrentAmps = new double[] {sim.getLeftCurrentDrawAmps()};
 
-    inputs.rightPositionRad = sim.getRightPositionMeters() / wheelRadiusMeters;
-    inputs.rightVelocityRadPerSec = sim.getRightVelocityMetersPerSecond() / wheelRadiusMeters;
+    inputs.rightPositionRad = sim.getRightPositionMeters() / WHEEL_RADIUS_METERS;
+    inputs.rightVelocityRadPerSec = sim.getRightVelocityMetersPerSecond() / WHEEL_RADIUS_METERS;
     inputs.rightAppliedVolts = rightAppliedVolts;
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
   }
