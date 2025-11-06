@@ -12,7 +12,7 @@ import edu.wpi.first.math.util.Units;
 
 /** This drive implementation is for Talon SRXs driving brushed motors (e.g. CIMS) with encoders. */
 public class DriveIOReal implements DriveIO {
-  private static final double ticksPerRevolution = 1440;
+  private static final double ticksPerRevolution = TICKS_PER_REVOLUTION;
 
   private final TalonSRX leftLeader = new TalonSRX(LEFT_LEADER_CAN_ID);
   private final TalonSRX leftFollower = new TalonSRX(LEFT_FOLLOWER_CAN_ID);
@@ -22,9 +22,9 @@ public class DriveIOReal implements DriveIO {
   public DriveIOReal() {
     var config = new TalonSRXConfiguration();
     config.peakCurrentLimit = CURRENT_LIMIT;
-    config.continuousCurrentLimit = CURRENT_LIMIT - 15;
+    config.continuousCurrentLimit = CURRENT_LIMIT - (int)CURRENT_LIMIT_OFFSET;
     config.peakCurrentDuration = 250;
-    config.voltageCompSaturation = 12.0;
+    config.voltageCompSaturation = VOLTAGE_COMPENSATION;
     config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
     leftLeader.configAllSettings(config);
@@ -47,7 +47,7 @@ public class DriveIOReal implements DriveIO {
         Units.rotationsToRadians(
             leftLeader.getSelectedSensorVelocity()
                 / ticksPerRevolution
-                * 10.0); // Raw units are ticks per 100ms :(
+                * SENSOR_VELOCITY_CONVERSION); // Raw units are ticks per 100ms :(
     inputs.leftAppliedVolts = leftLeader.getMotorOutputVoltage();
     inputs.leftCurrentAmps =
         new double[] {leftLeader.getStatorCurrent(), leftFollower.getStatorCurrent()};
@@ -58,7 +58,7 @@ public class DriveIOReal implements DriveIO {
         Units.rotationsToRadians(
             rightLeader.getSelectedSensorVelocity()
                 / ticksPerRevolution
-                * 10.0); // Raw units are ticks per 100ms :(
+                * SENSOR_VELOCITY_CONVERSION); // Raw units are ticks per 100ms :(
     inputs.rightAppliedVolts = rightLeader.getMotorOutputVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getStatorCurrent(), rightFollower.getStatorCurrent()};
@@ -67,8 +67,8 @@ public class DriveIOReal implements DriveIO {
   @Override
   public void setVoltage(double leftVolts, double rightVolts) {
     // OK to just divide by 12 because voltage compensation is enabled
-    leftLeader.set(TalonSRXControlMode.PercentOutput, leftVolts / 12.0);
-    rightLeader.set(TalonSRXControlMode.PercentOutput, rightVolts / 12.0);
+    leftLeader.set(TalonSRXControlMode.PercentOutput, leftVolts / VOLTAGE_COMPENSATION);
+    rightLeader.set(TalonSRXControlMode.PercentOutput, rightVolts / VOLTAGE_COMPENSATION);
   }
 
   @Override
@@ -79,15 +79,15 @@ public class DriveIOReal implements DriveIO {
         TalonSRXControlMode.Velocity,
         Units.radiansToRotations(leftRadPerSec)
             * ticksPerRevolution
-            / 10.0, // Raw units are ticks per 100ms :(
+            / SENSOR_VELOCITY_CONVERSION, // Raw units are ticks per 100ms :(
         DemandType.ArbitraryFeedForward,
-        leftFFVolts / 12.0);
+        leftFFVolts / VOLTAGE_COMPENSATION);
     rightLeader.set(
         TalonSRXControlMode.Velocity,
         Units.radiansToRotations(rightRadPerSec)
             * ticksPerRevolution
-            / 10.0, // Raw units are ticks per 100ms :(
+            / SENSOR_VELOCITY_CONVERSION, // Raw units are ticks per 100ms :(
         DemandType.ArbitraryFeedForward,
-        rightFFVolts / 12.0);
+        rightFFVolts / VOLTAGE_COMPENSATION);
   }
 }

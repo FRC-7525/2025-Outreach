@@ -8,8 +8,8 @@ public enum DriveStates implements SubsystemStates {
         double forward = drive.getController().getLeftY();
         double rotation = drive.getController().getRightX();
         if (drive.isSlowMode()) {
-            forward *= 0.3;
-            rotation *= 0.3;
+            forward *= DriveConstants.SLOW_MODE_MULTIPLIER;
+            rotation *= DriveConstants.SLOW_MODE_MULTIPLIER;
         }
         drive.arcadeDrive(forward, rotation);
 	}),
@@ -18,8 +18,8 @@ public enum DriveStates implements SubsystemStates {
         double left = drive.getController().getLeftY();
         double right = drive.getController().getRightY();
         if (drive.isSlowMode()) {
-            left *= 0.3;
-            right *= 0.3;
+            left *= DriveConstants.SLOW_MODE_MULTIPLIER;
+            right *= DriveConstants.SLOW_MODE_MULTIPLIER;
         }
         drive.tankDrive(left, right);
 	});

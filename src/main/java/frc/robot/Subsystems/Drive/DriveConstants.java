@@ -22,6 +22,14 @@ public class DriveConstants {
   public static final boolean RIGHT_INVERTED = true;
   public static final DCMotor GEARBOX = DCMotor.getCIM(2);
 
+  public static final double DEADBAND = 0.02;
+  public static final double SLOW_MODE_MULTIPLIER = 0.3;
+  public static final double VOLTAGE_COMPENSATION = 12.0;
+  public static final double TICKS_PER_REVOLUTION = 1440.0;
+  public static final double SENSOR_VELOCITY_CONVERSION = 10.0; // ticks per 100ms to per sec
+  public static final double SIM_UPDATE_PERIOD_SEC = 0.02;
+  public static final double CURRENT_LIMIT_OFFSET = 15.0;
+
   // Velocity PID configuration
   public static final double REAL_KP = 0.0;
   public static final double REAL_KD = 0.0;

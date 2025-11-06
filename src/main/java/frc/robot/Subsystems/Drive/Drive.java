@@ -123,15 +123,15 @@ public class Drive extends Subsystem<DriveStates> {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    double left = MathUtil.applyDeadband(leftSpeed, 0.02);
-    double right = MathUtil.applyDeadband(rightSpeed, 0.02);
+    double left = MathUtil.applyDeadband(leftSpeed, DEADBAND);
+    double right = MathUtil.applyDeadband(rightSpeed, DEADBAND);
 
     runClosedLoop(left * MAX_SPEED_METERS_PER_SEC, right * MAX_SPEED_METERS_PER_SEC);
   }
 
   public void arcadeDrive(double forward, double rotation) {
-    double x = MathUtil.applyDeadband(forward, 0.02);
-    double z = MathUtil.applyDeadband(rotation, 0.02);
+    double x = MathUtil.applyDeadband(forward, DEADBAND);
+    double z = MathUtil.applyDeadband(rotation, DEADBAND);
 
     // Calculate speeds
     var speeds = DifferentialDrive.arcadeDriveIK(x, z, true);

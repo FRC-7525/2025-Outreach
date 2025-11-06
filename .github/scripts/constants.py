@@ -9,7 +9,8 @@ excused_files = ["GlobalConstants.java", "IndexerConstants.java", "ManagerConsta
 excused_dirs = [
     "bin",
     "build",
-    "src/main/java/frc/robot/pioneersLib"
+    "src/main/java/frc/robot/pioneersLib",
+    "src/main/java/frc/robot/teamLib"
 ]
 
 # Weird stuff that shouldn't go in constants, dont put function/var names in here theyre already checked
