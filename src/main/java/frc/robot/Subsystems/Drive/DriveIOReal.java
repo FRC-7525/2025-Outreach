@@ -23,7 +23,7 @@ public class DriveIOReal implements DriveIO {
 		var config = new TalonSRXConfiguration();
 		config.peakCurrentLimit = CURRENT_LIMIT;
 		config.continuousCurrentLimit = CURRENT_LIMIT - (int) CURRENT_LIMIT_OFFSET;
-		config.peakCurrentDuration = 250;
+		config.peakCurrentDuration = PEAK_CURRENT_DURATION_MS;
 		config.voltageCompSaturation = VOLTAGE_COMPENSATION;
 		config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 

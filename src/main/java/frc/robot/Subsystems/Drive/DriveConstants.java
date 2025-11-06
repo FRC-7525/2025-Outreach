@@ -41,4 +41,7 @@ public class DriveConstants {
 	public static final double SIM_KD = 0.0;
 	public static final double SIM_KS = 0.0;
 	public static final double SIM_KV = 0.227;
+
+    public static final double TWO = 2.0;
+    public static final int PEAK_CURRENT_DURATION_MS = 250;
 }

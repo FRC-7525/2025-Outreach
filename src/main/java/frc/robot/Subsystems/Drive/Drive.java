@@ -218,7 +218,7 @@ public class Drive extends Subsystem<DriveStates> {
 
 	/** Returns the average velocity in radians/second. */
 	public double getCharacterizationVelocity() {
-		return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
+		return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / TWO;
 	}
 
 	/** Returns true if slow mode is enabled. */

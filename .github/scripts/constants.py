@@ -10,7 +10,7 @@ excused_dirs = [
     "bin",
     "build",
     "src/main/java/frc/robot/pioneersLib",
-    "src/main/java/frc/robot/teamLib"
+    "src/main/java/frc/robot/TeamLib"
 ]
 
 # Weird stuff that shouldn't go in constants, dont put function/var names in here theyre already checked
