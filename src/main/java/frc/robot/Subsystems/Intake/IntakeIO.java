@@ -1,4 +1,5 @@
 package frc.robot.Subsystems.Intake;
+
 public interface IntakeIO {
 	public static class IntakeIOInputs {
 

@@ -2,6 +2,7 @@ package frc.robot.Subsystems.AdjustableHood;
 
 import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.SUBSYSTEM_NAME;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHoodIO.AdjustableHoodIOInputs;

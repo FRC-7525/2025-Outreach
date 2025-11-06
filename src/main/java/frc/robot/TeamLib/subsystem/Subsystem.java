@@ -18,6 +18,7 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 
 	private StateType state = null;
 	private Timer stateTimer = new Timer();
+
 	@SuppressWarnings("unused")
 	private String subsystemName;
 
@@ -36,7 +37,7 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 		// Commented out bc bad code
 		// Logger.recordOutput(subsystemName + "/state", state.getStateString());
 		// if (!DriverStation.isEnabled()) return;
-		
+
 		runState();
 
 		checkTriggers();
@@ -44,18 +45,18 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 	}
 
 	protected abstract void runState();
-	
+
 	/**
 	 * Called AFTER the subsystem is set to a new state.
 	 * Override to implement functionality
 	 */
-	protected void stateInit() {};
+	protected void stateInit() {}
 
 	/**
-	 * Called BEFORE the subsystem is set to a new state. 
+	 * Called BEFORE the subsystem is set to a new state.
 	 * Override to implement functionality
 	 */
-	protected void stateExit() {};
+	protected void stateExit() {}
 
 	/**
 	 * Triggers for state transitions
@@ -64,8 +65,9 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 	 * @param condition A {@link BooleanSupplier} that triggers the state transition
 	 */
 	protected void addTrigger(StateType startType, StateType endType, BooleanSupplier condition) {
-		triggerMap.computeIfAbsent(startType, k -> new ArrayList<>())
-				.add(new Trigger<>(condition, endType));
+		triggerMap
+			.computeIfAbsent(startType, k -> new ArrayList<>())
+			.add(new Trigger<>(condition, endType));
 	}
 
 	protected void addRunnableTrigger(Runnable runnable, BooleanSupplier check) {
@@ -76,7 +78,7 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 		List<Trigger<StateType>> triggers = triggerMap.get(state);
 		if (triggers == null) return;
 
-		for (var trigger: triggers) {
+		for (var trigger : triggers) {
 			if (trigger.isTriggered()) {
 				setState(trigger.getResultState());
 			}
@@ -84,7 +86,7 @@ public abstract class Subsystem<StateType extends SubsystemStates> extends Subsy
 	}
 
 	private void checkRunnableTriggers() {
-		for (var trigger: runnableTriggerList) {
+		for (var trigger : runnableTriggerList) {
 			if (trigger.isTriggered()) {
 				trigger.run();
 			}

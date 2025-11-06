@@ -5,9 +5,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.Set;
 
-
 public interface VisionIO {
-	
 	public static class VisionIOInputs {
 
 		public boolean connected = false;

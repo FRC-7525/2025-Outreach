@@ -11,6 +11,7 @@ import frc.robot.Subsystems.Indexer.Indexer;
 import frc.robot.Subsystems.Intake.Intake;
 import frc.robot.Subsystems.Vision.Vision;
 import frc.robot.TeamLib.subsystem.*;
+
 public class Manager extends Subsystem<ManagerStates> {
 
 	private static Manager instance;

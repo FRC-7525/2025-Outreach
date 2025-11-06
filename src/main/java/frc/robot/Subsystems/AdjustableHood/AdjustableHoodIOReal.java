@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.PIVOT_PID;
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.Real.*;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.util.Units;
