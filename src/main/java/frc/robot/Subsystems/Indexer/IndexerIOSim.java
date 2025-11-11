@@ -9,8 +9,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Indexer.IndexerConstants.SIM;
-import org.littletonrobotics.junction.Logger;
 
 public class IndexerIOSim implements IndexerIO {
 
@@ -54,10 +54,10 @@ public class IndexerIOSim implements IndexerIO {
 	public void logInfo() {
 		flywheelSim.update(SIMULATION_PERIOD);
 
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Input Voltage", flywheelSim.getInputVoltage());
-		Logger.recordOutput(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Speed Setpoint", getMotorSpeedSetpoint());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Motor Speed", getMotorSpeed());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Input Voltage", flywheelSim.getInputVoltage());
+		SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Ball Count", getBallCount());
 	}
 
 	@Override

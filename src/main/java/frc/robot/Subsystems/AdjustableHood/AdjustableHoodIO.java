@@ -1,10 +1,8 @@
 package frc.robot.Subsystems.AdjustableHood;
 
 import edu.wpi.first.units.measure.Angle;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface AdjustableHoodIO {
-	@AutoLog
 	public static class AdjustableHoodIOInputs {
 
 		public Angle hoodSetpoint;

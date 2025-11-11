@@ -3,7 +3,7 @@ package frc.robot.Manager;
 import frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystemStates;
 import frc.robot.Subsystems.Indexer.IndexerState;
 import frc.robot.Subsystems.Intake.IntakeStates;
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum ManagerStates implements SubsystemStates {
 	IDLE("Idle", IntakeStates.IDLE, IndexerState.IDLE, HoodedShooterSupersystemStates.IDLE),

@@ -2,7 +2,7 @@ package frc.robot.Subsystems.Intake;
 
 import static edu.wpi.first.units.Units.*;
 
-import org.team7525.subsystem.SubsystemStates;
+import frc.robot.TeamLib.subsystem.*;
 
 public enum IntakeStates implements SubsystemStates {
 	INTAKING(

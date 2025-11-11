@@ -4,10 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.Set;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface VisionIO {
-	@AutoLog
 	public static class VisionIOInputs {
 
 		public boolean connected = false;

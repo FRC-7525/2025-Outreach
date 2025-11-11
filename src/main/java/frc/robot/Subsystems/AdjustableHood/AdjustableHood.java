@@ -4,13 +4,14 @@ import static frc.robot.GlobalConstants.*;
 import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.SUBSYSTEM_NAME;
 
 import edu.wpi.first.units.measure.Angle;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.AdjustableHood.AdjustableHoodIO.AdjustableHoodIOInputs;
+import frc.robot.TeamLib.subsystem.*;
 
 public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 
 	private AdjustableHoodIO io;
-	private AdjustableHoodIOInputsAutoLogged inputs;
+	private AdjustableHoodIOInputs inputs;
 	private Angle dynamicSetpoint;
 	private static AdjustableHood instance;
 
@@ -31,7 +32,7 @@ public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 	private AdjustableHood(AdjustableHoodIO io) {
 		super(SUBSYSTEM_NAME, AdjustableHoodStates.IDLE);
 		this.io = io;
-		inputs = new AdjustableHoodIOInputsAutoLogged();
+		inputs = new AdjustableHoodIOInputs();
 	}
 
 	@Override
@@ -43,8 +44,7 @@ public class AdjustableHood extends Subsystem<AdjustableHoodStates> {
 		}
 
 		io.updateInputs(inputs);
-		Logger.processInputs(SUBSYSTEM_NAME, inputs);
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State", getState().getStateString());
+		SmartDashboard.putString(SUBSYSTEM_NAME + "/State", getState().getStateString());
 	}
 
 	public void setDynamicHoodSetpoint(Angle setpoint) {

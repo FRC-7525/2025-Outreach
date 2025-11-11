@@ -82,8 +82,8 @@ def checkConnectedToIdle(state_map):
     notToIdle = []
     for state_name, state in state_map.items():
         if state_name in EXCLUDED_STATES: continue
-        for connections in state["connectionsTo"]:
-            if connections.to == "IDLE": continue
+        for connections in state.get("connectionsTo", []):
+            if connections["to"] == "IDLE": continue
             else: notToIdle.append(state_name)
     return notToIdle
 

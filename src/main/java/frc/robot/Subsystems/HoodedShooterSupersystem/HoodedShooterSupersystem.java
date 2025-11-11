@@ -6,10 +6,10 @@ import static frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersy
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.AdjustableHood.AdjustableHood;
 import frc.robot.Subsystems.Shooter.Shooter;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+import frc.robot.TeamLib.subsystem.*;
 
 public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystemStates> {
 
@@ -38,7 +38,7 @@ public class HoodedShooterSupersystem extends Subsystem<HoodedShooterSupersystem
 		hood.periodic();
 		shooter.periodic();
 
-		Logger.recordOutput(SUBSYSTEM_NAME + "/State", getState().getStateString());
+		SmartDashboard.putString(SUBSYSTEM_NAME + "/State", getState().getStateString());
 	}
 
 	/*

@@ -9,7 +9,7 @@ public class GlobalConstants {
 		REAL,
 		TESTING,
 		SIM,
-	} // No point in having replay tbh
+	}
 
 	public static final RobotMode ROBOT_MODE = RobotBase.isReal() ? RobotMode.REAL : RobotMode.SIM; // Change this to TESTING for testing purposes
 

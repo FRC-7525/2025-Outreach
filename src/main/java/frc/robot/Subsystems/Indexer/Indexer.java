@@ -2,9 +2,9 @@ package frc.robot.Subsystems.Indexer;
 
 import static frc.robot.Subsystems.Indexer.IndexerConstants.SUBSYSTEM_NAME;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants;
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+import frc.robot.TeamLib.subsystem.*;
 
 public class Indexer extends Subsystem<IndexerState> {
 
@@ -29,7 +29,7 @@ public class Indexer extends Subsystem<IndexerState> {
 
 	@Override
 	protected void runState() {
-		Logger.recordOutput(SUBSYSTEM_NAME + "/state", getState().getStateString());
+		SmartDashboard.putString(SUBSYSTEM_NAME + "/state", getState().getStateString());
 		io.setMotorSpeed(getState().getMotorSpeed());
 		io.logInfo();
 	}

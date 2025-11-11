@@ -2,19 +2,19 @@ package frc.robot.Subsystems.Intake;
 
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 
-import org.littletonrobotics.junction.Logger;
-import org.team7525.subsystem.Subsystem;
+import frc.robot.Subsystems.Intake.IntakeIO.IntakeIOInputs;
+import frc.robot.TeamLib.subsystem.*;
 
 public class Intake extends Subsystem<IntakeStates> {
 
 	private IntakeIO io;
-	private IntakeIOInputsAutoLogged inputs;
+	private IntakeIOInputs inputs;
 	private static Intake instance;
 
 	private Intake(IntakeIO io) {
 		super("Intake", IntakeStates.IDLE);
 		this.io = io;
-		inputs = new IntakeIOInputsAutoLogged();
+		inputs = new IntakeIOInputs();
 	}
 
 	@Override
@@ -23,7 +23,6 @@ public class Intake extends Subsystem<IntakeStates> {
 		io.setWheelSpeed(getState().getWheelSpeedSetpoint());
 
 		io.updateInputs(inputs);
-		Logger.processInputs("Intake", inputs);
 	}
 
 	public static Intake getInstance() {

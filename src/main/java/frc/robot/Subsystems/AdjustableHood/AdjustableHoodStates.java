@@ -4,8 +4,8 @@ import static frc.robot.Subsystems.AdjustableHood.AdjustableHoodConstants.*;
 
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Subsystems.HoodedShooterSupersystem.HoodedShooterSupersystem;
+import frc.robot.TeamLib.subsystem.*;
 import java.util.function.Supplier;
-import org.team7525.subsystem.SubsystemStates;
 
 public enum AdjustableHoodStates implements SubsystemStates {
 	IDLE("IDLE", () -> IDLE_ANGLE),
