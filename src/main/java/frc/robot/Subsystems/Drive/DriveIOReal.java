@@ -12,8 +12,7 @@ import edu.wpi.first.math.util.Units;
 /** This drive implementation is for Talon SRXs driving brushed motors (e.g. CIMS) with encoders. */
 public class DriveIOReal implements DriveIO {
 
-	private static final double ticksPerRevolution = TICKS_PER_REVOLUTION;
-
+	//dont think theres any point in making a new ticks per revolution, so removed that
 	private final TalonSRX leftLeader = new TalonSRX(LEFT_LEADER_CAN_ID);
 	private final TalonSRX leftFollower = new TalonSRX(LEFT_FOLLOWER_CAN_ID);
 	private final TalonSRX rightLeader = new TalonSRX(RIGHT_LEADER_CAN_ID);
@@ -42,10 +41,10 @@ public class DriveIOReal implements DriveIO {
 	@Override
 	public void updateInputs(DriveIOInputs inputs) {
 		inputs.leftPositionRad = Units.rotationsToRadians(
-			leftLeader.getSelectedSensorPosition() / ticksPerRevolution
+			leftLeader.getSelectedSensorPosition() / TICKS_PER_REVOLUTION
 		);
 		inputs.leftVelocityRadPerSec = Units.rotationsToRadians(
-			(leftLeader.getSelectedSensorVelocity() / ticksPerRevolution) *
+			(leftLeader.getSelectedSensorVelocity() / TICKS_PER_REVOLUTION) *
 			SENSOR_VELOCITY_CONVERSION
 		); // Raw units are ticks per 100ms :(
 		inputs.leftAppliedVolts = leftLeader.getMotorOutputVoltage();
@@ -55,10 +54,10 @@ public class DriveIOReal implements DriveIO {
 		};
 
 		inputs.rightPositionRad = Units.rotationsToRadians(
-			rightLeader.getSelectedSensorPosition() / ticksPerRevolution
+			rightLeader.getSelectedSensorPosition() / TICKS_PER_REVOLUTION
 		);
 		inputs.rightVelocityRadPerSec = Units.rotationsToRadians(
-			(rightLeader.getSelectedSensorVelocity() / ticksPerRevolution) *
+			(rightLeader.getSelectedSensorVelocity() / TICKS_PER_REVOLUTION) *
 			SENSOR_VELOCITY_CONVERSION
 		); // Raw units are ticks per 100ms :(
 		inputs.rightAppliedVolts = rightLeader.getMotorOutputVoltage();
@@ -85,14 +84,14 @@ public class DriveIOReal implements DriveIO {
 		// OK to just divide FF by 12 because voltage compensation is enabled
 		leftLeader.set(
 			TalonSRXControlMode.Velocity,
-			(Units.radiansToRotations(leftRadPerSec) * ticksPerRevolution) /
+			(Units.radiansToRotations(leftRadPerSec) * TICKS_PER_REVOLUTION) /
 			SENSOR_VELOCITY_CONVERSION, // Raw units are ticks per 100ms :(
 			DemandType.ArbitraryFeedForward,
 			leftFFVolts / VOLTAGE_COMPENSATION
 		);
 		rightLeader.set(
 			TalonSRXControlMode.Velocity,
-			(Units.radiansToRotations(rightRadPerSec) * ticksPerRevolution) /
+			(Units.radiansToRotations(rightRadPerSec) * TICKS_PER_REVOLUTION) /
 			SENSOR_VELOCITY_CONVERSION, // Raw units are ticks per 100ms :(
 			DemandType.ArbitraryFeedForward,
 			rightFFVolts / VOLTAGE_COMPENSATION

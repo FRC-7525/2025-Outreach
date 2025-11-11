@@ -3,22 +3,17 @@ package frc.robot.Subsystems.Drive;
 import static frc.robot.Subsystems.Drive.DriveConstants.*;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants;
 import frc.robot.GlobalConstants.RobotMode;
+import frc.robot.Subsystems.Vision.*;
 import frc.robot.Subsystems.Drive.DriveIO.DriveIOInputs;
-import frc.robot.Subsystems.Drive.GyroIO.GyroIOInputs;
 import frc.robot.TeamLib.subsystem.*;
 
 public class Drive extends Subsystem<DriveStates> {
@@ -26,33 +21,23 @@ public class Drive extends Subsystem<DriveStates> {
 	private static Drive instance;
 	private final DriveIO io;
 	private final DriveIOInputs inputs = new DriveIOInputs();
-	private final GyroIO gyroIO;
-	private final GyroIOInputs gyroInputs = new GyroIOInputs();
+	private final double kS = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KS : REAL_KS;
+	private final double kV = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KV : REAL_KV;
 	private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(
 		TRACK_WIDTH
 	);
-	private final double kS = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KS : REAL_KS;
-	private final double kV = GlobalConstants.ROBOT_MODE == RobotMode.SIM ? SIM_KV : REAL_KV;
-	private final DifferentialDrivePoseEstimator poseEstimator = new DifferentialDrivePoseEstimator(
-		kinematics,
-		Rotation2d.kZero,
-		0.0,
-		0.0,
-		Pose2d.kZero
-	);
-	private Rotation2d rawGyroRotation = Rotation2d.kZero;
-	private double lastLeftPositionMeters = 0.0;
-	private double lastRightPositionMeters = 0.0;
 	private XboxController controller = new XboxController(0);
 
 	private boolean slowMode = false; // Slow mode variable
 
-	private Drive(DriveIO io, GyroIO gyroIO) {
+	private Drive(DriveIO io) {
 		super("Drive", DriveStates.TANK_DRIVE);
 		this.io = io;
-		this.gyroIO = gyroIO;
 		// Configure SysId
 	}
+
+	private final PIDController anglePID = new PIDController(0, 0, 0);
+	private final PIDController distancePID = new PIDController(0, 0, 0);
 
 	public XboxController getController() {
 		return controller;
@@ -62,13 +47,13 @@ public class Drive extends Subsystem<DriveStates> {
 		if (instance == null) {
 			switch (GlobalConstants.ROBOT_MODE) {
 				case REAL:
-					instance = new Drive(new DriveIOReal(), new GyroIOReal());
+					instance = new Drive(new DriveIOReal());
 					break;
 				case SIM:
-					instance = new Drive(new DriveIOSim(), new GyroIO() {});
+					instance = new Drive(new DriveIOSim());
 					break;
 				case TESTING:
-					instance = new Drive(new DriveIOReal(), new GyroIOReal());
+					instance = new Drive(new DriveIOReal());
 					break;
 				default:
 					throw new IllegalStateException(
@@ -82,26 +67,7 @@ public class Drive extends Subsystem<DriveStates> {
 	@Override
 	public void runState() {
 		io.updateInputs(inputs);
-		gyroIO.updateInputs(gyroInputs);
 		getState().driveRobot();
-
-		// Update gyro angle
-		if (gyroInputs.connected) {
-			// Use the real gyro angle
-			rawGyroRotation = gyroInputs.yawPosition;
-		} else {
-			// Use the angle delta from the kinematics and module deltas
-			Twist2d twist = kinematics.toTwist2d(
-				getLeftPositionMeters() - lastLeftPositionMeters,
-				getRightPositionMeters() - lastRightPositionMeters
-			);
-			rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
-			lastLeftPositionMeters = getLeftPositionMeters();
-			lastRightPositionMeters = getRightPositionMeters();
-		}
-
-		// Update odometry
-		poseEstimator.update(rawGyroRotation, getLeftPositionMeters(), getRightPositionMeters());
 	}
 
 	/** Runs the drive at the desired velocity. */
@@ -153,40 +119,13 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 	}
 
-	/** Returns the current odometry pose. */
-
-	public Pose2d getPose() {
-		return poseEstimator.getEstimatedPosition();
-	}
-
-	/** Returns the current odometry rotation. */
-	public Rotation2d getRotation() {
-		return getPose().getRotation();
-	}
-
-	/** Resets the current odometry pose. */
-	public void setPose(Pose2d pose) {
-		poseEstimator.resetPosition(
-			rawGyroRotation,
-			getLeftPositionMeters(),
-			getRightPositionMeters(),
-			pose
-		);
-	}
 
 	/**
-	 * Adds a vision measurement to the pose estimator.
+	 * Adds a vision measurement to the estimator.
 	 *
 	 * @param visionPose The pose of the robot as measured by the vision camera.
 	 * @param timestamp The timestamp of the vision measurement in seconds.
-	 */
-	public void addVisionMeasurement(
-		Pose2d visionPose,
-		double timestamp,
-		Matrix<N3, N1> visionMeasurementStdDevMeters
-	) {
-		poseEstimator.addVisionMeasurement(visionPose, timestamp, visionMeasurementStdDevMeters);
-	}
+	 
 
 	/** Returns the position of the left wheels in meters. */
 
@@ -200,14 +139,31 @@ public class Drive extends Subsystem<DriveStates> {
 		return inputs.rightPositionRad * WHEEL_RADIUS_METERS;
 	}
 
+
+	public void alignToBucket() {
+		Vision vision = Vision.getInstance();
+		Rotation2d yaw = vision.getYaw();
+		Rotation2d pitch = vision.getPitch();
+	
+		double distanceToBucket = calculateDistanceFromPitch(pitch);
+	
+		double angleError = yaw.getRadians();
+		double distanceError = distanceToBucket - 0; //replace with distance setpoint
+	
+		double angleCorrection = anglePID.calculate(angleError);
+		double distanceCorrection = distancePID.calculate(distanceError);
+	
+		runClosedLoop(distanceCorrection, angleCorrection);
+	}
+	
+	private double calculateDistanceFromPitch(Rotation2d pitch) {
+		return 0 / Math.tan(pitch.getRadians());  // Replace 0 with the bucket height 
+	}
+
 	/** Returns the velocity of the left wheels in meters/second. */
 
 	public double getLeftVelocityMetersPerSec() {
 		return inputs.leftVelocityRadPerSec * WHEEL_RADIUS_METERS;
-	}
-
-	public double getAngularVelocityRadPerSec() {
-		return gyroInputs.yawVelocityRadPerSec;
 	}
 
 	/** Returns the velocity of the right wheels in meters/second. */

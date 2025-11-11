@@ -48,6 +48,7 @@ public class VisionIOPhotonVision implements VisionIO {
 				inputs.latestTargetObservation = new TargetObservation(
 					new Rotation2d(),
 					new Rotation2d()
+				
 				);
 			}
 
@@ -147,17 +148,6 @@ public class VisionIOPhotonVision implements VisionIO {
 			}
 		}
 
-		// Save pose observations to inputs object
-		inputs.poseObservations = new PoseObservation[poseObservations.size()];
-		for (int i = 0; i < poseObservations.size(); i++) {
-			inputs.poseObservations[i] = poseObservations.get(i);
-		}
-
-		// Save tag IDs to inputs objects
-		inputs.tagIds = new int[tagIds.size()];
-		int i = 0;
-		for (int id : tagIds) {
-			inputs.tagIds[i++] = id;
-		}
+		
 	}
 }

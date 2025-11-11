@@ -1,22 +1,15 @@
 package frc.robot.Subsystems.Vision;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static frc.robot.GlobalConstants.ROBOT_MODE;
 import static frc.robot.Subsystems.Vision.VisionConstants.*;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
+
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.Drive.Drive;
-import frc.robot.Subsystems.Vision.VisionIO.PoseObservation;
+
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservationType;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOInputs;
 import java.util.LinkedList;
@@ -44,12 +37,7 @@ public class Vision extends SubsystemBase {
 						//Replace w/ actual stuff once camera num and pos is figured out
 					};
 					case SIM -> new VisionIO[] {
-						//Replace w/ actual stuff once camera num and pos is figured out
-						new VisionIOPhotonVisionSim(
-							FRONT_LEFT_CAM_NAME,
-							ROBOT_TO_FRONT_LEFT_CAMERA,
-							Drive.getInstance()::getPose
-						),
+					
 					};
 					case TESTING -> new VisionIO[] {
 						//Replace w/ actual stuff once camera num and pos is figured out
@@ -144,8 +132,6 @@ public class Vision extends SubsystemBase {
 			// 		// Loop over pose observations
 			for (var observation : inputs[cameraIndex].poseObservations) {
 				// Check whether to reject pose
-				boolean rejectPose = shouldBeRejected(observation);
-
 				// 			Logger.recordOutput(
 				// 				"Vision/Camera" + Integer.toString(cameraIndex) + "/Tag Count",
 				// 				observation.tagCount() == 0
@@ -166,15 +152,9 @@ public class Vision extends SubsystemBase {
 				// 			);
 
 				// Add pose to log
-				robotPoses.add(observation.pose());
-				if (rejectPose) {
-					robotPosesRejected.add(observation.pose());
-				} else {
-					robotPosesAccepted.add(observation.pose());
-				}
+		
 
 				// Skip if rejected
-				if (rejectPose) continue;
 
 				//Calculate standard deviations
 				double stdDevFactor =
@@ -193,15 +173,9 @@ public class Vision extends SubsystemBase {
 				}
 
 				//254 standard dev
-				Matrix<N3, N1> visionStandardDev = calculateStandardDev(observation);
 
 				// Send vision observation
-				Drive.getInstance()
-					.addVisionMeasurement(
-						observation.pose().toPose2d(),
-						observation.timestamp(),
-						visionStandardDev
-					);
+				
 			}
 
 			// 		// Log camera datadata
@@ -229,52 +203,17 @@ public class Vision extends SubsystemBase {
 		}
 	}
 
-	private boolean shouldBeRejected(PoseObservation observation) {
-		return (
-			observation.tagCount() == 0 || // Must have at least one tag
-			(observation.tagCount() == ONE_TAG && observation.ambiguity() > maxAmbiguity) || // Cannot be high ambiguity
-			Math.abs(observation.pose().getZ()) > maxZError || // Must have realistic Z coordinate
-			Math.abs(Units.radiansToDegrees(Drive.getInstance().getAngularVelocityRadPerSec())) >
-			MAX_ANGULAR_VELOCITY.in(DegreesPerSecond) //TODO: Might not work
-		); // Robot must not be rotating rapidly
+	
+
+	
+
+	public Rotation2d getYaw() {
+		return inputs[0].latestTargetObservation.tx();
 	}
 
-	public Matrix<N3, N1> calculateStandardDev(PoseObservation observation) {
-		double xyStds;
-		double degStds;
-		if (observation.tagCount() == ONE_TAG) {
-			double poseDifference = observation
-				.pose()
-				.getTranslation()
-				.toTranslation2d()
-				.getDistance(Drive.getInstance().getPose().getTranslation());
-
-			//TODO: Idk if this is important
-			// if (seenReefTags(observation) && observation.avgTagArea() > 0.2) {
-			// 	xyStds = 0.5;
-			// }
-
-			// 1 target with large area and close to estimated pose
-			if (observation.avgTagArea() > LARGE_TAG_AREA && poseDifference < CLOSE_POSE_DIFF) {
-				xyStds = largeTagxyStds;
-			}
-			// 1 target farther away and estimated pose is close
-			else if (
-				observation.avgTagArea() > SMALL_TAG_AREA && poseDifference < CLOSER_POSE_DIFF
-			) {
-				xyStds = farTagxyStds;
-			} else {
-				xyStds = oneTagxyStds;
-			}
-			return VecBuilder.fill(xyStds, xyStds, Units.degreesToRadians(VEC_BUILDER_DEGREES)); // I dont even know, ts so random
-		} else {
-			xyStds = noTagxyStds;
-			degStds = noTagdegStds;
-			return VecBuilder.fill(xyStds, xyStds, degStds);
-		}
+	public Rotation2d getPitch() {
+		return inputs[0].latestTargetObservation.ty();
 	}
 
-	public Pose2d getTargetPose(int camIndex) {
-		return inputs[camIndex].targetPose;
-	}
+
 }
