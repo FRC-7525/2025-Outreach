@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.GlobalConstants;
 import frc.robot.GlobalConstants.RobotMode;
-import frc.robot.Subsystems.Vision.*;
 import frc.robot.Subsystems.Drive.DriveIO.DriveIOInputs;
+import frc.robot.Subsystems.Vision.*;
 import frc.robot.TeamLib.subsystem.*;
 
 public class Drive extends Subsystem<DriveStates> {
@@ -119,7 +119,6 @@ public class Drive extends Subsystem<DriveStates> {
 		);
 	}
 
-
 	/**
 	 * Adds a vision measurement to the estimator.
 	 *
@@ -139,25 +138,24 @@ public class Drive extends Subsystem<DriveStates> {
 		return inputs.rightPositionRad * WHEEL_RADIUS_METERS;
 	}
 
-
 	public void alignToBucket() {
 		Vision vision = Vision.getInstance();
 		Rotation2d yaw = vision.getYaw();
 		Rotation2d pitch = vision.getPitch();
-	
+
 		double distanceToBucket = calculateDistanceFromPitch(pitch);
-	
+
 		double angleError = yaw.getRadians();
 		double distanceError = distanceToBucket - 0; //replace with distance setpoint
-	
+
 		double angleCorrection = anglePID.calculate(angleError);
 		double distanceCorrection = distancePID.calculate(distanceError);
-	
+
 		runClosedLoop(distanceCorrection, angleCorrection);
 	}
-	
+
 	private double calculateDistanceFromPitch(Rotation2d pitch) {
-		return 0 / Math.tan(pitch.getRadians());  // Replace 0 with the bucket height 
+		return 0 / Math.tan(pitch.getRadians()); // Replace 0 with the bucket height
 	}
 
 	/** Returns the velocity of the left wheels in meters/second. */

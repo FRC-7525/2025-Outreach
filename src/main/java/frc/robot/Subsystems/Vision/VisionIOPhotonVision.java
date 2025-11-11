@@ -48,7 +48,6 @@ public class VisionIOPhotonVision implements VisionIO {
 				inputs.latestTargetObservation = new TargetObservation(
 					new Rotation2d(),
 					new Rotation2d()
-				
 				);
 			}
 
@@ -147,7 +146,5 @@ public class VisionIOPhotonVision implements VisionIO {
 				inputs.targetPose = new Pose2d();
 			}
 		}
-
-		
 	}
 }

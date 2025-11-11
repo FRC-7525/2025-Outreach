@@ -5,11 +5,9 @@ import static frc.robot.Subsystems.Vision.VisionConstants.*;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Subsystems.Vision.VisionIO.PoseObservationType;
 import frc.robot.Subsystems.Vision.VisionIO.VisionIOInputs;
 import java.util.LinkedList;
@@ -36,9 +34,7 @@ public class Vision extends SubsystemBase {
 					case REAL -> new VisionIO[] {
 						//Replace w/ actual stuff once camera num and pos is figured out
 					};
-					case SIM -> new VisionIO[] {
-					
-					};
+					case SIM -> new VisionIO[] {};
 					case TESTING -> new VisionIO[] {
 						//Replace w/ actual stuff once camera num and pos is figured out
 					};
@@ -152,7 +148,6 @@ public class Vision extends SubsystemBase {
 				// 			);
 
 				// Add pose to log
-		
 
 				// Skip if rejected
 
@@ -171,11 +166,10 @@ public class Vision extends SubsystemBase {
 					linearStdDev *= cameraStdDevFactors[cameraIndex];
 					angularStdDev *= cameraStdDevFactors[cameraIndex];
 				}
-
 				//254 standard dev
 
 				// Send vision observation
-				
+
 			}
 
 			// 		// Log camera datadata
@@ -203,10 +197,6 @@ public class Vision extends SubsystemBase {
 		}
 	}
 
-	
-
-	
-
 	public Rotation2d getYaw() {
 		return inputs[0].latestTargetObservation.tx();
 	}
@@ -214,6 +204,4 @@ public class Vision extends SubsystemBase {
 	public Rotation2d getPitch() {
 		return inputs[0].latestTargetObservation.ty();
 	}
-
-
 }
